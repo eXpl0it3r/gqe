@@ -13,6 +13,7 @@
 #include <GQE/Core/Core_types.hpp>
 #include <GQE/Core/interfaces/IState.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 /// Provides the TicTacToe GameState example
 class GameState : public GQE::IState
