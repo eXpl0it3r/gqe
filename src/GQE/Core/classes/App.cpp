@@ -256,89 +256,89 @@ namespace GQE
 #if (SFML_VERSION_MAJOR < 2)
     while(IsRunning() && mWindow.IsOpened() && !mStateManager.IsEmpty())
 #else
-      while(IsRunning() && mWindow.isOpen() && !mStateManager.IsEmpty())
+    while(IsRunning() && mWindow.isOpen() && !mStateManager.IsEmpty())
+#endif
+    {
+      // Get the currently active state
+      IState* anState = mStateManager.GetActiveState();
+
+      // Check for corrupt state returned by our StateManager
+      assert(NULL != anState && "App::Loop() received a bad pointer");
+
+      // Create a fixed rate Update loop
+#if (SFML_VERSION_MAJOR < 2)
+      while(anUpdateClock.GetElapsedTime() > anUpdateNext)
+#else
+      while(anUpdateClock.getElapsedTime().asMilliseconds() > anUpdateNext)
 #endif
       {
-        // Get the currently active state
-        IState* anState = mStateManager.GetActiveState();
-
-        // Check for corrupt state returned by our StateManager
-        assert(NULL != anState && "App::Loop() received a bad pointer");
-
-        // Create a fixed rate Update loop
+        // Handle some events and let the current active state handle the rest
+        sf::Event anEvent;
 #if (SFML_VERSION_MAJOR < 2)
-        while(anUpdateClock.GetElapsedTime() > anUpdateNext)
+        while(mWindow.GetEvent(anEvent))
 #else
-          while(anUpdateClock.getElapsedTime().asMilliseconds() > anUpdateNext)
+        while(mWindow.pollEvent(anEvent))
+#endif
+        {
+#if (SFML_VERSION_MAJOR < 2)
+          // Switch on Event Type
+          switch(anEvent.Type)
+#else
+          // Switch on Event Type
+          switch(anEvent.type)
 #endif
           {
-            // Handle some events and let the current active state handle the rest
-            sf::Event anEvent;
+            case sf::Event::Closed:       // Window closed
+              Quit(StatusAppOK);
+              break;
+            case sf::Event::GainedFocus:  // Window gained focus
+              anState->Resume();
+              break;
+            case sf::Event::LostFocus:    // Window lost focus
+              anState->Pause();
+              break;
+            case sf::Event::Resized:      // Window resized
+              break;
+            default:                      // Current active state will handle
+              anState->HandleEvents(anEvent);
+          } // switch(anEvent.Type)
+        } // while(mWindow.GetEvent(anEvent))
+
+        // Let the current active state perform fixed updates next
+        anState->UpdateFixed();
+
+        // Let the StatManager perfom its updates
+        mStatManager.UpdateFixed();
+
+        // Update our update next time
+        anUpdateNext += mUpdateRate;
+      } // while(anUpdateClock.GetElapsedTime() > anUpdateNext)
+
+      // Let the current active state perform its variable update
 #if (SFML_VERSION_MAJOR < 2)
-            while(mWindow.GetEvent(anEvent))
+      anState->UpdateVariable(mWindow.GetFrameTime());
 #else
-              while(mWindow.pollEvent(anEvent))
-#endif
-              {
-#if (SFML_VERSION_MAJOR < 2)
-                // Switch on Event Type
-                switch(anEvent.Type)
-#else
-                  // Switch on Event Type
-                  switch(anEvent.type)
-#endif
-                  {
-                    case sf::Event::Closed:       // Window closed
-                      Quit(StatusAppOK);
-                      break;
-                    case sf::Event::GainedFocus:  // Window gained focus
-                      anState->Resume();
-                      break;
-                    case sf::Event::LostFocus:    // Window lost focus
-                      anState->Pause();
-                      break;
-                    case sf::Event::Resized:      // Window resized
-                      break;
-                    default:                      // Current active state will handle
-                      anState->HandleEvents(anEvent);
-                  } // switch(anEvent.Type)
-              } // while(mWindow.GetEvent(anEvent))
-
-            // Let the current active state perform fixed updates next
-            anState->UpdateFixed();
-
-            // Let the StatManager perfom its updates
-            mStatManager.UpdateFixed();
-
-            // Update our update next time
-            anUpdateNext += mUpdateRate;
-          } // while(anUpdateClock.GetElapsedTime() > anUpdateNext)
-
-        // Let the current active state perform its variable update
-#if (SFML_VERSION_MAJOR < 2)
-        anState->UpdateVariable(mWindow.GetFrameTime());
-#else
-        // Convert to floating point value of seconds for SFML 2.0
-        anState->UpdateVariable(anFrameClock.restart().asSeconds());
+      // Convert to floating point value of seconds for SFML 2.0
+      anState->UpdateVariable(anFrameClock.restart().asSeconds());
 #endif
 
-        // Let the current active state draw stuff
-        anState->Draw();
+      // Let the current active state draw stuff
+      anState->Draw();
 
-        // Let the StatManager perform its drawing
-        mStatManager.Draw();
+      // Let the StatManager perform its drawing
+      mStatManager.Draw();
 
 #if (SFML_VERSION_MAJOR < 2)
-        // Display Render window to the screen
-        mWindow.Display();
+      // Display Render window to the screen
+      mWindow.Display();
 #else
-        // Display Render window to the screen
-        mWindow.display();
+      // Display Render window to the screen
+      mWindow.display();
 #endif
 
-        // Handle Cleanup of any recently removed states at this point as needed
-        mStateManager.HandleCleanup(); 
-      } // while(IsRunning() && !mStates.empty())
+      // Handle Cleanup of any recently removed states at this point as needed
+      mStateManager.HandleCleanup(); 
+    } // while(IsRunning() && !mStates.empty())
   }
 
   void App::Cleanup(void)
