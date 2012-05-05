@@ -17,13 +17,9 @@ namespace GQE
 class GQE_API Entity
 {
 public:
-    Entity(typeEntityID theEntityID);
-    Entity(typePrototypeID thePrototypeID);
+    Entity();
 
     ~Entity();
-    Entity* MakeCopy(typeEntityID theEntityID);
-    typeEntityID GetEntityID();
-    typePrototypeID GetPrototypeID();
     AProperty* GetProperty(std::string theLable);
 
     void SetProperty(AProperty* theProperty);
@@ -41,11 +37,9 @@ public:
     void Draw();
 
     void HandleCleanup();
-private:
+protected:
     std::map<std::string, AProperty*> mPropertyList;
     std::map<std::string, IComponent*> mComponentList;
-    typeEntityID mEntityID;
-    typePrototypeID mPrototypeID;
 };
 }
 

@@ -19,13 +19,13 @@ namespace GQE
     class GQE_API TProperty : public AProperty
   {
     public:
-      TProperty():
-        AProperty(typeid(TProperty<TYPE>).name())
+	TProperty(AProperty* theParent):
+        AProperty(typeid(TProperty<TYPE>).name(),theParent)
     {
 
     }
-      TProperty(std::string theLable):
-        AProperty(typeid(TYPE).name(),theLable)
+      TProperty(AProperty* theParent,std::string theLable):
+        AProperty(typeid(TYPE).name(),theParent,theLable)
     {
 
     }
@@ -37,6 +37,21 @@ namespace GQE
       {
         mValue=theValue;
       }
+	  void Update()
+	  {
+		  if(mParent==NULL)
+			  return;
+		  if(mParent->getType()->Name()!=typeid(TYPE).name())
+			  return;
+		  TProperty<TYPE>* theParent=static_cast<TProperty<TYPE>*>(mParent);
+		  setValue(theParent->getValue());
+	  }
+	  AProperty* MakeChild()
+	  {
+		  TProperty<TYPE> anProperty(this,getLable());
+		  anProperty.setValue(mValue);
+		  return &anProperty;
+	  }
     private:
       TYPE mValue;
   };

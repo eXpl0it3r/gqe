@@ -55,7 +55,7 @@ namespace GQE
        * Draw is responsible for handling all Drawing needs for this component
        */
       virtual void Draw(void);
-
+	  IComponent* MakeClone();
     protected:
       /**
        * Cleanup is responsible for performing any cleanup required before

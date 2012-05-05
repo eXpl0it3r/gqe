@@ -6,7 +6,7 @@ namespace GQE
   {
     if(theEntity==NULL || theLable=="")
       return;
-    TProperty<int>* anPropterty=new TProperty<int>();
+    TProperty<int>* anPropterty=new TProperty<int>(NULL);
     anPropterty->setLable(theLable);
     anPropterty->setValue(theValue);
     theEntity->SetProperty(anPropterty);
@@ -27,7 +27,7 @@ namespace GQE
   {
     if(theEntity==NULL || theLable=="")
       return;
-    TProperty<std::string>* anPropterty=new TProperty<std::string>();
+    TProperty<std::string>* anPropterty=new TProperty<std::string>(NULL);
     anPropterty->setLable(theLable);
     anPropterty->setValue(theValue);
     theEntity->SetProperty(anPropterty);

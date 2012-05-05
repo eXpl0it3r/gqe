@@ -2,14 +2,7 @@
 namespace GQE
 {
 
-Entity::Entity(typeEntityID theEntityID):
-    mEntityID(theEntityID),
-    mPrototypeID("")
-{
-}
-Entity::Entity(typePrototypeID thePrototypeID):
-    mEntityID(0),
-    mPrototypeID(thePrototypeID)
+Entity::Entity()
 {
 }
 Entity::~Entity()
@@ -32,22 +25,6 @@ Entity::~Entity()
         delete anComponent;
         anComponent=NULL;
     }
-}
-Entity* Entity::MakeCopy(typeEntityID theEntityID)
-{
-    std::map<std::string,AProperty*>::iterator anProptertyIter;
-    std::map<std::string,IComponent*>::iterator anComponentIter;
-    mEntityID=theEntityID;
-    Entity* anCopy=new Entity(*this);
-    return anCopy;
-}
-typeEntityID Entity::GetEntityID()
-{
-    return mEntityID;
-}
-typePrototypeID Entity::GetPrototypeID()
-{
-    return mPrototypeID;
 }
 AProperty* Entity::GetProperty(std::string theKey)
 {

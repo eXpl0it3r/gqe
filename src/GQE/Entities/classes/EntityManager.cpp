@@ -1,83 +1,78 @@
 #include <GQE/Entities/classes/EntityManager.hpp>
+#include <GQE/Entities/classes/Prototype.hpp>
+#include <GQE/Entities/classes/Instance.hpp>
 namespace GQE
 {
-Entity* EntityManager::AddEntity(Entity* thePrototype)
+void EntityManager::AddPrototype(Prototype* thePrototype)
 {
     if(thePrototype==NULL)
-        return NULL;
-    Entity* anEntity=thePrototype->MakeCopy(mEntityCount);
-    mEntityCount++;
-    mEntityList.push_back(anEntity);
-    return anEntity;
+        return;
+	mPrototypeList[thePrototype->GetID()]=thePrototype;
 }
-Entity* EntityManager::AddPrototype(typePrototypeID thePrototypeID)
+typeInstanceID EntityManager::AddInstance(typePrototypeID thePrototypeID)
 {
     if(thePrototypeID=="")
-        return NULL;
-    Entity* anEntity=new Entity(thePrototypeID);
-    mPrototypeList.push_back(anEntity);
-    return anEntity;
+        return 0;
+	Instance* anInstance=mPrototypeList.at(thePrototypeID)->MakeInstance(mNextID);
+    mNextID++;
+    mInstanceList.push_back(anInstance);
+    return anInstance->GetID();
 }
-Entity* EntityManager::GetEntity(typeEntityID theEntityID)
+
+Instance* EntityManager::GetInstance(typeInstanceID theEntityID)
 {
     if(theEntityID==0)
         return NULL;
-    Entity* anEntity;
-    std::vector<Entity*>::iterator anEntityIter;
-    for(anEntityIter=mEntityList.begin(); anEntityIter!=mEntityList.end(); ++anEntityIter)
+    Instance* anInstance;
+    std::vector<Instance*>::iterator anInstanceIter;
+    for(anInstanceIter=mInstanceList.begin(); anInstanceIter!=mInstanceList.end(); ++anInstanceIter)
     {
-        anEntity=*anEntityIter;
-        if(anEntity->GetEntityID()==theEntityID)
+        anInstance=*anInstanceIter;
+        if(anInstance->GetID()==theEntityID)
         {
-            return anEntity;
+            return anInstance;
         }
     }
     return NULL;
 }
-Entity* EntityManager::GetPrototype(typePrototypeID thePrototypeID)
+Prototype* EntityManager::GetPrototype(typePrototypeID thePrototypeID)
 {
     if(thePrototypeID=="")
         return NULL;
-    Entity* anEntity;
-    std::vector<Entity*>::iterator anEntityIter;
-    for(anEntityIter=mPrototypeList.begin(); anEntityIter!=mPrototypeList.end(); ++anEntityIter)
-    {
-        anEntity=*anEntityIter;
-        if(anEntity->GetPrototypeID()==thePrototypeID)
-        {
-            return anEntity;
-        }
-    }
-    return NULL;
+	if(mPrototypeList.find(thePrototypeID)==mPrototypeList.end())
+        return NULL;
+    Prototype* anPrototype=mPrototypeList[thePrototypeID];
+    return anPrototype;
 }
 void EntityManager::HandleEvents(sf::Event theEvent)
 {
-    std::vector<Entity*>::iterator it;
-    for(it=mEntityList.begin(); it!=mEntityList.end(); ++it)
+    std::vector<Instance*>::iterator it;
+    for(it=mInstanceList.begin(); it!=mInstanceList.end(); ++it)
     {
+		(*it)->UpdateInfo();
         (*it)->UpdateFixed();
     }
 }
 void EntityManager::UpdateFixed()
 {
-    std::vector<Entity*>::iterator it;
-    for(it=mEntityList.begin(); it!=mEntityList.end(); ++it)
+    std::vector<Instance*>::iterator it;
+    for(it=mInstanceList.begin(); it!=mInstanceList.end(); ++it)
     {
         (*it)->UpdateFixed();
     }
 }
 void EntityManager::UpdateVariable(float theElapsdTime)
 {
-    std::vector<Entity*>::iterator it;
-    for(it=mEntityList.begin(); it!=mEntityList.end(); ++it)
+    std::vector<Instance*>::iterator it;
+    for(it=mInstanceList.begin(); it!=mInstanceList.end(); ++it)
     {
         (*it)->UpdateVariable(theElapsdTime);
     }
 }
 void EntityManager::Draw()
 {
-    std::vector<Entity*>::iterator it;
-    for(it=mEntityList.begin(); it!=mEntityList.end(); ++it)
+    std::vector<Instance*>::iterator it;
+    for(it=mInstanceList.begin(); it!=mInstanceList.end(); ++it)
     {
         (*it)->Draw();
     }

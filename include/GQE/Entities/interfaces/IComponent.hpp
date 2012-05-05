@@ -93,6 +93,8 @@ namespace GQE
        * flagged to be cleaned up after it completes the game loop.
        */
       void HandleCleanup(void);
+
+	  virtual IComponent* MakeClone()=0;
     protected:
       /// Address to the App class
       App&                  mApp;

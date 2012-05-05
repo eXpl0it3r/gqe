@@ -18,11 +18,11 @@ class GQE_API EntityManager
 {
 public:
     ///Manager Functions
-    Entity* AddPrototype(typePrototypeID theEntityID);
-    Entity* AddEntity(Entity* thePrototype);
+    void AddPrototype(Prototype* thePrototype);
+    typeInstanceID AddInstance(typePrototypeID thePrototypeID);
 
-    Entity* GetEntity(typeEntityID theEntityID);
-    Entity* GetPrototype(typePrototypeID theEntityID);
+	Instance* GetInstance(typeInstanceID theInstanceID);
+    Prototype* GetPrototype(typePrototypeID thePrototypeID);
 
     void HandleEvents(sf::Event theEvent);
 
@@ -37,9 +37,9 @@ public:
 protected:
 
 private:
-    std::vector<Entity*> mEntityList;
-    std::vector<Entity*> mPrototypeList;
-    Uint32 mEntityCount;
+    std::vector<Instance*> mInstanceList;
+    std::map<typePrototypeID,Prototype*> mPrototypeList;
+    typeInstanceID mNextID;
 };
 }
 
