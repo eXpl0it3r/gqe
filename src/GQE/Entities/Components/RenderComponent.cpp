@@ -2,8 +2,9 @@
 #include <GQE/Entities/classes/Entity.hpp>
 namespace GQE
 {
-  RenderComponent::RenderComponent(App& theApp) :
+  RenderComponent::RenderComponent(IApp& theApp) :
     IComponent("Render",theApp),
+    mImage("images"),
     mSprite(NULL)
   {
 
@@ -23,7 +24,8 @@ namespace GQE
     std::string anSpriteName=getString(mEntity,"SpriteName","");
     if(anSpriteName!="")
     {
-      mSprite=mApp.mAssetManager.GetSprite(anSpriteName);
+      mImage.SetID(anSpriteName, true);
+      mSprite = new sf::Sprite(mImage.GetAsset());
 #if (SFML_VERSION_MAJOR < 2)
       mSprite->SetPosition(0,0);
 #else

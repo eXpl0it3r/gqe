@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <GQE/Core/assets/ImageAsset.hpp>
 #include <GQE/Entities/Entities_types.hpp>
 #include <GQE/Entities/interfaces/IComponent.hpp>
 
@@ -15,7 +16,7 @@ namespace GQE
        * RenderComponent constructor
        * @param[in] theApp is the address to the App derived class
        */
-      RenderComponent(App& theApp);
+      RenderComponent(IApp& theApp);
 
       /**
        * RenderComponent deconstructor
@@ -63,6 +64,7 @@ namespace GQE
        */
       virtual void Cleanup(void);
     private:
+      ImageAsset  mImage;
       sf::Sprite* mSprite;
       /**
        * Our copy constructor is private because we do not allow copies of

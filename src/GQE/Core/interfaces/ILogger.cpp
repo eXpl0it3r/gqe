@@ -6,12 +6,13 @@
  * @author Ryan Lindeman
  * @date 20110801 - Initial Release
  * @date 20120426 - Change to ILogger::GetLogger call instead of gLogger
+ * @date 20120512 - Renamed App to IApp since it really is just an interface
  */
 #include <ctime>
 #include <ostream>
 
 #include <GQE/Core/interfaces/ILogger.hpp>
-#include <GQE/Core/classes/App.hpp>
+#include <GQE/Core/interfaces/IApp.hpp>
 
 namespace GQE
 {
@@ -34,6 +35,12 @@ namespace GQE
     if(mActive)
     {
       SetActive(false);
+    }
+
+    // Are we going out of scope? then remove our static pointer
+    if(gInstance == this)
+    {
+      gInstance = NULL;
     }
   }
 
@@ -108,11 +115,11 @@ namespace GQE
   void ILogger::FatalShutdown(void)
   {
     // Does the gApp pointer exist? then call the Quit method
-    if(NULL != GQE::gApp)
+    if(NULL != IApp::GetApp())
     {
       // Use the gApp pointer to call the Quit method and indicate an error
       // has occurred and the application needs to quit soon.
-      gApp->Quit(mExitCode);
+      IApp::GetApp()->Quit(mExitCode);
     }
     else
     {

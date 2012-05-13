@@ -25,10 +25,10 @@ int main(int argc, char* argv[])
   int anExitCode = GQE::StatusNoError;
 
   // Create our Logger first before creating our application
-  GQE::gLogger = new(std::nothrow) GQE::FileLogger("output.txt");
+  GQE::FileLogger anLogger("output.txt");
 
   // Create our action application.
-  GQE::App* anApp = new(std::nothrow) SpaceDotsApp();
+  GQE::IApp* anApp = new(std::nothrow) SpaceDotsApp();
   assert(NULL != anApp && "main() Can't create Application");
 
   // Process command line arguments
@@ -46,12 +46,6 @@ int main(int argc, char* argv[])
 
   // Don't keep pointers to objects we have just deleted
   anApp = NULL;
-
-  // Delete our Logger last before exiting
-  delete GQE::gLogger;
-
-  // Don't keep pointers to objects we have just deleted
-  GQE::gLogger = NULL;
 
   // return our exit code
   return anExitCode;

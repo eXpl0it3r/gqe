@@ -8,7 +8,7 @@
 #ifndef ICOMPONENT_HPP_INCLUDED
 #define ICOMPONENT_HPP_INCLUDED
 
-#include <GQE/Core/classes/App.hpp>
+#include <GQE/Core/interfaces/IApp.hpp>
 #include <GQE/Entities/Entities_types.hpp>
 #include <GQE/Entities/interfaces/TProperty.hpp>
 
@@ -22,7 +22,7 @@ namespace GQE
        * @param[in] theComponentID to use for this component object
        * @param[in] theApp is the address to the App derived class
        */
-      IComponent(const typeComponentID theComponentID, App& theApp);
+      IComponent(const typeComponentID theComponentID, IApp& theApp);
 
       /**
        * IComponent deconstructor
@@ -95,9 +95,9 @@ namespace GQE
       void HandleCleanup(void);
     protected:
       /// Address to the App class
-      App&                  mApp;
+      IApp&                 mApp;
       //pointer to the attached entity.
-      Entity* mEntity;
+      Entity*               mEntity;
       /**
        * Cleanup is responsible for performing any cleanup required before
        * this component is removed.
@@ -105,7 +105,7 @@ namespace GQE
       virtual void Cleanup(void);
     private:
       /// The component ID
-      const typeComponentID     mComponentID;
+      const typeComponentID mComponentID;
       /// Boolean that indicates that DoInit has been called
       bool                  mInit;
       /// component needs to be cleaned up at the end of the next game loop
