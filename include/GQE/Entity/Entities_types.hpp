@@ -19,7 +19,8 @@ class IComponent;
 
 // Forward declare GQE Entities classes provided
 class Entity;
-
+class Prototype;
+class Instance;
 class EntityManager;
 /// Declare Component ID typedef which is used for identifying Component objects
 typedef std::string typeComponentID;
@@ -27,14 +28,14 @@ typedef std::string typeComponentID;
 /// Declare Prototype ID typedef which is used for identifying Entity Prototype objects
 typedef std::string typePrototypeID;
 /// Declare Entity ID typedef which is used for identifying Entity objects
-typedef Uint32 typeEntityID;
+typedef Uint32 typeInstanceID;
 
 
 //Helper Funtions
-void setInt(Entity* theEntity, std::string theLable, int theValue);
-int getInt(Entity* theEntity, std::string theLable, int theDefault);
+void GQE_API setInt(Entity* theEntity, std::string theLable, int theValue);
+int GQE_API getInt(Entity* theEntity, std::string theLable, int theDefault);
 
-void setString(Entity* theEntity, std::string theLable, std::string theValue);
-std::string getString(Entity* theEntity, std::string theLable, std::string theDefault);
+void GQE_API setString(Entity* theEntity, std::string theLable, std::string theValue);
+std::string GQE_API getString(Entity* theEntity, std::string theLable, std::string theDefault);
 }
 #endif
