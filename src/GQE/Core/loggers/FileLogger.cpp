@@ -16,12 +16,17 @@ namespace GQE
     ILogger(theDefault)
   {
     mFileStream.open(theFilename);
+    if(mFileStream.is_open())
+    {
+      LogMessage(SeverityInfo, __FILE__, __LINE__, "FileLogger::ctor()");
+    }
   }
 
   FileLogger::~FileLogger()
   {
     if(mFileStream.is_open())
     {
+      LogMessage(SeverityInfo, __FILE__, __LINE__, "FileLogger::dtor()");
       mFileStream.close();
     }
   }
