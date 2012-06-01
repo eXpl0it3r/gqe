@@ -34,14 +34,14 @@ namespace GQE
     Instance* anInstance=new Instance(theID, *this);
     std::map<const typePropertyID, IProperty*>::iterator anProptertyIter;
     std::map<const typeComponentID, IComponent*>::iterator anComponentIter;
-    for(anProptertyIter=mPropertyList.begin();
+		for(anProptertyIter=mPropertyList.begin();
         anProptertyIter!=mPropertyList.end();
         ++anProptertyIter)
     {
       IProperty* anProperty = (anProptertyIter->second);
       anInstance->AddProperty(anProperty->MakeClone());
     }
-    for(anComponentIter=mComponentList.begin();
+		for(anComponentIter=mComponentList.begin();
         anComponentIter!=mComponentList.end();
         ++anComponentIter)
     {
