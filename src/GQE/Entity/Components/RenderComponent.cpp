@@ -30,6 +30,8 @@ namespace GQE
     IComponent::DoInit(theEntity);
     theEntity->AddProperty<std::string>("SpriteName", mImage.GetID());
     theEntity->AddProperty<sf::Vector2f>("Origin", sf::Vector2f(0.0f,0.0f));
+		theEntity->AddProperty<sf::IntRect>("SubRect",sf::IntRect(0,0,mImage.GetAsset().getSize().x,mImage.GetAsset().getSize().y));
+		theEntity->AddProperty<sf::Vector2f>("ImageSize",sf::Vector2f(mImage.GetAsset().getSize().x,mImage.GetAsset().getSize().y));
   }
 
   void RenderComponent::ReInit()
@@ -42,7 +44,12 @@ namespace GQE
 
   void RenderComponent::UpdateFixed()
   {
-    sf::Vector2f anPosition=mEntity->GetProperty<sf::Vector2f>("Position");
+
+  }
+
+  void RenderComponent::UpdateVariable(float theElapstedTime)
+  {
+		sf::Vector2f anPosition=mEntity->GetProperty<sf::Vector2f>("Position");
     float anRotation=mEntity->GetProperty<float>("Rotation");
     sf::Vector2f anScale=mEntity->GetProperty<sf::Vector2f>("Scale");
 #if (SFML_VERSION_MAJOR < 2)
@@ -55,12 +62,8 @@ namespace GQE
     mSprite.setPosition(anPosition);
     mSprite.setRotation(anRotation);
     mSprite.setScale(anScale);
+		mSprite.setTextureRect(mEntity->GetProperty<sf::IntRect>("SubRect"));
 #endif
-  }
-
-  void RenderComponent::UpdateVariable(float theElapstedTime)
-  {
-
   }
 
   void RenderComponent::Draw()
@@ -68,7 +71,7 @@ namespace GQE
 #if (SFML_VERSION_MAJOR < 2)
     mApp.mWindow.Draw(mSprite);
 #else
-    mApp.mWindow.draw(mSprite);
+   mApp.mWindow.draw(mSprite);
 #endif
   }
 
