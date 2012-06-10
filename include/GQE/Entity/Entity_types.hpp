@@ -15,31 +15,24 @@
 namespace GQE
 {
   // Forward declare GQE Entity interfaces provided
-  class IComponent;
   class IEntity;
   class IProperty;
-
+  class ISystem;
   // Forward declare GQE Entity classes provided
   class Prototype;
   class Instance;
-  class EntityManager;
-
-  // Forward declare GQE Entity components provided
-  class CoordComponent;
-  class DynamicComponent;
-  class RenderComponent;
-  class SolidComponent;
+  class PrototypeManager;
 
   /// Declare Property ID typedef which is used for identifying Properties
   typedef std::string typePropertyID;
 
-  /// Declare Component ID typedef which is used for identifying Component objects
-  typedef std::string typeComponentID;
-
   /// Declare Prototype ID typedef which is used for identifying Entity Prototype objects
   typedef std::string typePrototypeID;
 
-  /// Declare Entity ID typedef which is used for identifying Entity objects
+  /// Declare Prototype ID typedef which is used for identifying Entity Prototype objects
+  typedef std::string typeSystemID;
+
+	/// Declare Entity ID typedef which is used for identifying Entity objects
   typedef Uint32 typeInstanceID;
 }
 #endif // ENTITY_TYPES_HPP_INCLUDED

@@ -88,7 +88,7 @@ namespace GQE
         {
           if(mPropertyList.find(thePropertyID)!=mPropertyList.end())
           {
-            ELOG() << "Entity:AddProperty() label(" << thePropertyID << ") not found!" << std::endl;
+            ELOG() << "Entity:AddProperty() label(" << thePropertyID << ") Already exsists on this entity!" << std::endl;
             return;
           }
           TProperty<TYPE>* anProperty=new TProperty<TYPE>(thePropertyID);
@@ -101,56 +101,18 @@ namespace GQE
        * @param[in] theProperty is a pointer to a pre exisiting property.
        */
       void AddProperty(IProperty* theProperty);
-
-      /**
-       * AttachComponent Attaches a component to this entity.
-       * @param[in] theComponent is the pre made component to set.
+			/**
+       * AddSystem adds a dependant system to the entity.
+       * @param[in] theSystem is a pointer to the active system.
        */
-      void AttachComponent(IComponent* theComponent);
-
-      /**
-       * DetachComponent removes an exsisting component from this entity.
-       * @param[in] theComponentID is the ID of the Componenet.
-       */
-      void DetachComponent(const typeComponentID theComponentID);
-
-      /**
-       * HandleEvents tells all this entity's components to call their
-       * HandleEvent function.
-       * @param[in] theEvent is the SFML Event.
-       */
-      void HandleEvents(sf::Event theEvent);
-
-      /**
-       * UpdateFixed tells all this entity's components to call their UpdateFixed
-       * function.
-       */
-      void UpdateFixed(void);
-
-      /**
-       * UpdateVariable tells all this entity's components to call their
-       * UpdateVariable function.
-       * @param[in] theElapsedTime is the time since last UpdateVariable Call.
-       */
-      void UpdateVariable(float theElapsedTime);
-
-      /**
-       * Draw Tells all this entity's components to call their Draw Function
-       */
-      void Draw();
-
-      /**
-       * Destroys this entity and every thing attached to it.
-       */
-      void HandleCleanup();
+			void AddSystem(ISystem* theSystem);
     protected:
       // Variables
       ///////////////////////////////////////////////////////////////////////////
       /// A map of all Properties available for this IEntity derived class
       std::map<const typePropertyID, IProperty*>   mPropertyList;
-
-      /// A map of all Components available for this IEntity derived class
-      std::map<const typeComponentID, IComponent*> mComponentList;
+			//A list of systems this entity is controlled by
+			std::map<const typeSystemID,ISystem*> mSystemList;
   };
 }
 

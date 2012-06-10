@@ -1,55 +1,56 @@
 /**
- * Provides the Prototype class that can be used as a template class to produce
- * Instance classes.
+ * The ISystem interface class used for all derived ISystem entities that
+ * can be added to an IEntity class.
  *
- * @file src/GQE/Entity/classes/Prototype.cpp
+ * @file src/GQE/Entity/interfaces/ISystem.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
  */
-#include <GQE/Entity/classes/Prototype.hpp>
-#include <GQE/Entity/classes/Instance.hpp>
+#include <assert.h>
 #include <GQE/Entity/interfaces/ISystem.hpp>
+#include <GQE/Core/loggers/Log_macros.hpp>
+#include <GQE/Entity/classes/Instance.hpp>
+#include <GQE/Entity/classes/PrototypeManager.hpp>
 namespace GQE
 {
-  Prototype::Prototype(const typePrototypeID thePrototypeID) :
-    IEntity(),
-    mPrototypeID(thePrototypeID)
+	typeInstanceID ISystem::mNextID=0;
+	PrototypeManager* ISystem::gPrototypeManager=NULL;
+  ISystem::ISystem(const typeSystemID theSystemID , IApp& theApp) :
+    mApp(theApp),
+    mSystemID(theSystemID)
   {
-
+    ILOG() << "ISystem::ctor(" << mSystemID << ")" << std::endl;
+		if(gPrototypeManager==NULL)
+		{
+			gPrototypeManager=new PrototypeManager();
+		}
   }
 
-  Prototype::~Prototype()
+  ISystem::~ISystem()
   {
+    ILOG() << "ISystem::dtor(" << mSystemID << ")" << std::endl;
+  }
+	typeInstanceID ISystem::AddInstance(Instance* theInstance)
+	{
+		int anResult=0;
+		if(theInstance!=NULL)
+		{
+			mInstanceList.push_back(theInstance);
+			anResult=theInstance->GetID();
+		}
+		return anResult;
+	}
+	typeInstanceID ISystem::UseNextID()
+	{
+		mNextID++;
+		return mNextID;
+	}
 
+  const typeSystemID ISystem::GetID(void) const
+  {
+    return mSystemID;
   }
 
-  const typePrototypeID Prototype::GetID(void) const
-  {
-    return mPrototypeID;
-  }
-
-  Instance* Prototype::MakeInstance()
-  {
-    Instance* anInstance=new Instance(*this);
-    std::map<const typePropertyID, IProperty*>::iterator anProptertyIter;
-		for(anProptertyIter=mPropertyList.begin();
-        anProptertyIter!=mPropertyList.end();
-        ++anProptertyIter)
-    {
-      IProperty* anProperty = (anProptertyIter->second);
-      anInstance->AddProperty(anProperty->MakeClone());
-    }
-    std::map<const typeSystemID, ISystem*>::iterator anSystemIter;
-		for(anSystemIter=mSystemList.begin();
-        anSystemIter!=mSystemList.end();
-        ++anSystemIter)
-    {
-      ISystem* anSystem = (anSystemIter->second);
-      anInstance->AddSystem(anSystem);
-			anSystem->AddInstance(anInstance);
-    }
-    return anInstance;
-  }
 } // namespace GQE
 
 /**

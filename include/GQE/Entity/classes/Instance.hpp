@@ -21,7 +21,7 @@ namespace GQE
        * @param[in] theInstanceID to use for this Instance
        * @param[in] thePrototype class address used to create this Instance class
        */
-      Instance(const typeInstanceID theInstanceID, Prototype& thePrototype);
+      Instance(Prototype& thePrototype);
 
       /**
        * Instance deconstructor
@@ -40,11 +40,6 @@ namespace GQE
        * @return a pointer to the Prototype class used to create this Instance
        */
       Prototype& GetPrototype();
-
-      /**
-       * UpdateInfo will be called to update the information for this Instance.
-       */
-      void UpdateInfo();
     private:
       // Variables
       ///////////////////////////////////////////////////////////////////////////

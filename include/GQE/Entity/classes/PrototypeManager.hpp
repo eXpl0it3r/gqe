@@ -16,18 +16,18 @@
 namespace GQE
 {
   /// Provides the EntityManager class for managing Prototype and Instance classes
-  class GQE_API EntityManager
+  class GQE_API PrototypeManager
   {
     public:
       /**
        * EntityManager default constructor
        */
-      EntityManager();
+      PrototypeManager();
 
       /**
        * EntityManager deconstructor
        */
-      virtual ~EntityManager();
+      virtual ~PrototypeManager();
 
       /**
        * AddPrototype is responsible for adding a Prototype entity to the list
@@ -38,23 +38,6 @@ namespace GQE
       void AddPrototype(Prototype* thePrototype);
 
       /**
-       * AddInstance is responsible for adding a new Instance class using
-       * thePrototypeID as the template from which to make the new Instance
-       * class from.
-       * @param[in] thePrototypeID to use to create the new Instance class
-       * @return theInstanceID assigned to the new Instance class
-       */
-      typeInstanceID AddInstance(const typePrototypeID thePrototypeID);
-
-      /**
-       * GetInstance is responsible for returning the Instance class pointer
-       * that matches theInstanceID provided.
-       * @param[in] theInstanceID to find and return
-       * @return the pointer to the Instance class specified
-       */
-      Instance* GetInstance(const typeInstanceID theInstanceID);
-
-      /**
        * GetPrototype is responsible for returning the Prototype class pointer
        * that matches thePrototypeID provided.
        * @param[in] thePrototypeID to find and return
@@ -62,55 +45,17 @@ namespace GQE
        */
       Prototype* GetPrototype(const typePrototypeID thePrototypeID);
 
-      /**
-       * HandleEvents is responsible for letting each Instance class have a
-       * chance to handle theEvent specified.
-       * @param[in] theEvent to handle
-       */
-      void HandleEvents(sf::Event theEvent);
-
-      /**
-       * UpdateFixed is called a specific number of times every game loop and
-       * this method will allow each Instance class a chance to have its
-       * UpdateFixed method called for each game loop iteration.
-       */
-      void UpdateFixed(void);
-
-      /**
-       * UpdateVariable is called every time the game loop draws a frame and
-       * includes the elapsed time between the last UpdateVariable call for
-       * use with equations that use time as a variable. (e.g. physics velocity
-       * and acceleration equations).
-       */
-      void UpdateVariable(float theElapsedTime);
-
-      /**
-       * Draw is called during the game loop after events and the fixed update
-       * loop calls are completed and depends largely on the speed of the
-       * computer to determine how frequently it will be called. This gives the
-       * EntityManager a chance to call the Draw method for each Instance
-       * class.
-       */
-      void Draw(void);
-
-      /**
-       * HandleCleanup will be called during the game loop or IState shutdown
-       * process and gives a chance for each Instance and Prototype class an
-       * opportunity to clean up any loose ends and free up memory resources.
-       */
-      void HandleCleanup(void);
+      
 
     protected:
 
     private:
       // Variables
       ///////////////////////////////////////////////////////////////////////////
-      /// A linked list of all Instance classes managed by the EntityManager
-      std::vector<Instance*> mInstanceList;
+
       /// A map of Prototype classes managed by the EntityManager
       std::map<const typePrototypeID, Prototype*> mPrototypeList;
-      /// The next ID to assign to a new Instance class
-      typeInstanceID mNextID;
+
   };
 } // namespace GQE
 

@@ -6,12 +6,12 @@
  */
 #include <GQE/Entity/classes/Prototype.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
+#include <GQE/Entity/interfaces/ISystem.hpp>
 namespace GQE
 {
-  Instance::Instance(const typeInstanceID theInstanceID,
-      Prototype& thePrototype) :
+  Instance::Instance(Prototype& thePrototype) :
     IEntity(),
-    mInstanceID(theInstanceID),
+    mInstanceID(ISystem::UseNextID()),
     mPrototype(thePrototype)
   {
 
@@ -30,11 +30,6 @@ namespace GQE
   Prototype& Instance::GetPrototype()
   {
     return mPrototype;
-  }
-
-  void Instance::UpdateInfo()
-  {
-
   }
 } // namespace GQE
 

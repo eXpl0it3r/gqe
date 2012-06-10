@@ -41,7 +41,7 @@ namespace GQE
        * @param[in] theInstanceID to use for the instance being created
        * @return a pointer to the Instance class created.
        */
-      Instance* MakeInstance(typeInstanceID theInstanceID);
+      Instance* MakeInstance();
     private:
       // Variables
       ///////////////////////////////////////////////////////////////////////////

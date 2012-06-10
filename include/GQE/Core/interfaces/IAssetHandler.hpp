@@ -58,8 +58,7 @@ namespace GQE
       /**
        * GetFilename is responsible for retrieving the filename to use when
        * loading theAssetID specified.
-       * @param[in] theAssetID to set filename for
-       * @param[in] theFilename to use when loading this asset from a file
+       * @param[in] theAssetID to get filename for
        */
       virtual const std::string GetFilename(const typeAssetID theAssetID) const = 0;
 

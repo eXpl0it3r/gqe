@@ -33,7 +33,15 @@ namespace GQE
 #endif
   {
   }
-
+	ImageAsset::ImageAsset() :
+#if (SFML_VERSION_MAJOR < 2)
+    TAsset<sf::Image>("", GQE::AssetLoadLater, GQE::AssetLoadFromFile, GQE::AssetDropAtZero)
+#else
+    TAsset<sf::Texture>("", GQE::AssetLoadLater, GQE::AssetLoadFromFile, GQE::AssetDropAtZero)
+#endif
+  {
+  }
+	
   ImageAsset::~ImageAsset()
   {
   }

@@ -1,55 +1,47 @@
 /**
- * Provides the Prototype class that can be used as a template class to produce
- * Instance classes.
+ * Provides a system for Managing Prototype and Instance IEntity derived
+ * classes.
  *
- * @file src/GQE/Entity/classes/Prototype.cpp
+ * @file src/GQE/Entity/classes/EntityManager.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
  */
+#include <GQE/Entity/classes/PrototypeManager.hpp>
 #include <GQE/Entity/classes/Prototype.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
-#include <GQE/Entity/interfaces/ISystem.hpp>
+
 namespace GQE
 {
-  Prototype::Prototype(const typePrototypeID thePrototypeID) :
-    IEntity(),
-    mPrototypeID(thePrototypeID)
+  PrototypeManager::PrototypeManager()
   {
 
   }
 
-  Prototype::~Prototype()
+  PrototypeManager::~PrototypeManager()
   {
-
   }
 
-  const typePrototypeID Prototype::GetID(void) const
+  void PrototypeManager::AddPrototype(Prototype* thePrototype)
   {
-    return mPrototypeID;
+    if(thePrototype==NULL)
+      return;
+    mPrototypeList[thePrototype->GetID()]=thePrototype;
   }
 
-  Instance* Prototype::MakeInstance()
+
+  Prototype* PrototypeManager::GetPrototype(const typePrototypeID thePrototypeID)
   {
-    Instance* anInstance=new Instance(*this);
-    std::map<const typePropertyID, IProperty*>::iterator anProptertyIter;
-		for(anProptertyIter=mPropertyList.begin();
-        anProptertyIter!=mPropertyList.end();
-        ++anProptertyIter)
+    Prototype* anResult = NULL;
+
+    if(mPrototypeList.find(thePrototypeID)!=mPrototypeList.end())
     {
-      IProperty* anProperty = (anProptertyIter->second);
-      anInstance->AddProperty(anProperty->MakeClone());
+      anResult = mPrototypeList[thePrototypeID];
     }
-    std::map<const typeSystemID, ISystem*>::iterator anSystemIter;
-		for(anSystemIter=mSystemList.begin();
-        anSystemIter!=mSystemList.end();
-        ++anSystemIter)
-    {
-      ISystem* anSystem = (anSystemIter->second);
-      anInstance->AddSystem(anSystem);
-			anSystem->AddInstance(anInstance);
-    }
-    return anInstance;
+
+    // Return anResult found (which might be NULL if none was found)
+    return anResult;
   }
+
 } // namespace GQE
 
 /**

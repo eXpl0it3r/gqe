@@ -63,6 +63,7 @@ namespace GQE
         // Increment reference count to this asset
         mAsset = mAssetHandler.GetReference(mAssetID);
       }
+      
 
       /**
        * TAsset deconstructor

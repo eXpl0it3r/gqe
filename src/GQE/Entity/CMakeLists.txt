@@ -3,33 +3,26 @@ set(Entity_HEADER ${INCROOT}/Entity.hpp)
 
 # Entity library additional include files
 set(INC
-    
-    ${INCROOT}/Entity/classes/EntityManager.hpp
+    ${INCROOT}/Entity/systems/RenderSystem.hpp    
+    ${INCROOT}/Entity/classes/PrototypeManager.hpp
     ${INCROOT}/Entity/classes/Instance.hpp
     ${INCROOT}/Entity/classes/Prototype.hpp
-    ${INCROOT}/Entity/interfaces/IComponent.hpp
+    ${INCROOT}/Entity/interfaces/ISystem.hpp
     ${INCROOT}/Entity/interfaces/IEntity.hpp
     ${INCROOT}/Entity/interfaces/IProperty.hpp
     ${INCROOT}/Entity/interfaces/TProperty.hpp
-    ${INCROOT}/Entity/Components/CoordComponent.hpp
-    ${INCROOT}/Entity/Components/DynamicComponent.hpp
-    ${INCROOT}/Entity/Components/RenderComponent.hpp
-    ${INCROOT}/Entity/Components/SolidComponent.hpp
     ${INCROOT}/Entity/Entity_types.hpp
 )
 
 # Entity library source files
 set(SRC
-    ${SRCROOT}/Entity/classes/EntityManager.cpp
+    ${SRCROOT}/Entity/systems/RenderSystem.cpp
+    ${SRCROOT}/Entity/classes/PrototypeManager.cpp
     ${SRCROOT}/Entity/classes/Instance.cpp
     ${SRCROOT}/Entity/classes/Prototype.cpp
-    ${SRCROOT}/Entity/interfaces/IComponent.cpp
+    ${SRCROOT}/Entity/interfaces/ISystem.cpp
     ${SRCROOT}/Entity/interfaces/IEntity.cpp
     ${SRCROOT}/Entity/interfaces/IProperty.cpp
-    ${SRCROOT}/Entity/Components/CoordComponent.cpp
-    ${SRCROOT}/Entity/Components/DynamicComponent.cpp
-    ${SRCROOT}/Entity/Components/RenderComponent.cpp
-    ${SRCROOT}/Entity/Components/SolidComponent.cpp
     ${SRCROOT}/Entity/Entity_types.cpp
 )
 

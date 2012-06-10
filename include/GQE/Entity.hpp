@@ -15,17 +15,13 @@
 #include <GQE/Config.hpp>
 
 // GQE Entity includes
-#include <GQE/Entity/classes/EntityManager.hpp>
+#include <GQE/Entity/classes/PrototypeManager.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
 #include <GQE/Entity/classes/Prototype.hpp>
-#include <GQE/Entity/Components/CoordComponent.hpp>
-#include <GQE/Entity/Components/DynamicComponent.hpp>
-#include <GQE/Entity/Components/RenderComponent.hpp>
-#include <GQE/Entity/Components/SolidComponent.hpp>
-#include <GQE/Entity/interfaces/IComponent.hpp>
 #include "GQE/Entity/interfaces/IEntity.hpp"
 #include <GQE/Entity/interfaces/TProperty.hpp>
-
+#include <GQE/Entity/interfaces/ISystem.hpp>
+#include <GQE/Entity/systems/RenderSystem.hpp>
 #endif // ENTITY_HPP_INCLUDED
 
 /**
@@ -52,3 +48,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
