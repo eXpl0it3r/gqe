@@ -6,17 +6,14 @@
  * @date 20120418 - Initial Release
  * @date 20120507 - Changed how properties are retrived/set.
  * @date 20120519 - Renaimed Entity class to IEntity and moved to interfaces folder.
+ * @date 20120609 - Moved property methods to new PropertyManager class
  */
 #ifndef IENTITY_HPP_INCLUDED
 #define IENTITY_HPP_INCLUDED
 
 #include <map>
-#include <vector>
-#include <typeinfo>
 #include <SFML/Window/Event.hpp>
-#include <GQE/Core/loggers/Log_macros.hpp>
-#include <GQE/Entity/interfaces/IProperty.hpp>
-#include <GQE/Entity/interfaces/TProperty.hpp>
+#include <GQE/Entity/classes/PropertyManager.hpp>
 #include <GQE/Entity/Entity_types.hpp>
 
 namespace GQE
@@ -25,6 +22,10 @@ namespace GQE
   class GQE_API IEntity
   {
     public:
+      // Variables
+      ///////////////////////////////////////////////////////////////////////////
+      PropertyManager mProperties;
+
       /**
        * IEntity default constructor
        */
@@ -35,72 +36,6 @@ namespace GQE
        */
       virtual ~IEntity();
 
-      /**
-       * GetProperty returns the property as type with the ID of thePropertyID.
-       * @param[in] thePropertyID is the ID of the property to return.
-       * @return the value stored in the found propery in the form of TYPE. If no
-       * Property was found it returns the default value the type constructor.
-       */
-      template<class TYPE>
-        TYPE GetProperty(const typePropertyID thePropertyID)
-        {
-          if(mPropertyList.find(thePropertyID)!=mPropertyList.end())
-          {
-            if(mPropertyList.at(thePropertyID)->GetType()->Name()==typeid(TYPE).name())
-              return static_cast<TProperty<TYPE>*>(mPropertyList[thePropertyID])->GetValue();
-          }
-          else
-          {
-            WLOG() << "Entity:GetProperty() returning blank property(" << thePropertyID << ") type" << std::endl;
-          }
-          TYPE anReturn=TYPE();
-          return anReturn;
-        }
-
-      /**
-       * SetProperty sets the property with the ID of thePropertyID to theValue.
-       * @param[in] thePropertyID is the ID of the property to set.
-       * @param[in] theValue is the value to set.
-       */
-      template<class TYPE>
-        void SetProperty(const typePropertyID thePropertyID, TYPE theValue)
-        {
-          if(mPropertyList.find(thePropertyID)!=mPropertyList.end())
-          {
-            if(mPropertyList.at(thePropertyID)->GetType()->Name()==typeid(TYPE).name())
-            {
-              static_cast<TProperty<TYPE>*>(mPropertyList[thePropertyID])->SetValue(theValue);
-            }
-          }
-          else
-          {
-            ELOG() << "Entity:SetProperty() unable to find property(" << thePropertyID << ")" << std::endl;
-          }
-        }
-
-      /**
-       * AddProperty Creates a Property and addes it to this entity.
-       * @param[in] thePropertyID is the ID of the property to create.
-       * @param[in] theValue is the inital value to set.
-       */
-      template<class TYPE>
-        void AddProperty(const typePropertyID thePropertyID, TYPE theValue)
-        {
-          if(mPropertyList.find(thePropertyID)!=mPropertyList.end())
-          {
-            ELOG() << "Entity:AddProperty() label(" << thePropertyID << ") Already exsists on this entity!" << std::endl;
-            return;
-          }
-          TProperty<TYPE>* anProperty=new TProperty<TYPE>(thePropertyID);
-          anProperty->SetValue(theValue);
-          mPropertyList[anProperty->GetID()]=anProperty;
-        }
-
-      /**
-       * AddProperty gets a premade Property and addes it to this entity.
-       * @param[in] theProperty is a pointer to a pre exisiting property.
-       */
-      void AddProperty(IProperty* theProperty);
 			/**
        * AddSystem adds a dependant system to the entity.
        * @param[in] theSystem is a pointer to the active system.
@@ -109,8 +44,6 @@ namespace GQE
     protected:
       // Variables
       ///////////////////////////////////////////////////////////////////////////
-      /// A map of all Properties available for this IEntity derived class
-      std::map<const typePropertyID, IProperty*>   mPropertyList;
 			//A list of systems this entity is controlled by
 			std::map<const typeSystemID,ISystem*> mSystemList;
   };

@@ -5,6 +5,7 @@
  * @file include/GQE/Entity/classes/Prototype.hpp>
  * @author Jacob Dix
  * @date 20120423 - Initial Release
+ * @date 20120616 - Fixed MakeInstance method parameter comments
  */
 #ifndef PROTOTYPE_HPP_INCLUDED
 #define PROTOTYPE_HPP_INCLUDED
@@ -38,10 +39,9 @@ namespace GQE
        * MakeInstance is responsible for creating an Instance of this Prototype
        * class using the MakeClone methods provided by the IComponent and
        * IProperty derived classes.
-       * @param[in] theInstanceID to use for the instance being created
        * @return a pointer to the Instance class created.
        */
-      Instance* MakeInstance();
+      Instance* MakeInstance(void);
     private:
       // Variables
       ///////////////////////////////////////////////////////////////////////////

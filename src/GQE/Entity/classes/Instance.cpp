@@ -1,6 +1,7 @@
 /**
- *
- * @file src/GQE/Entity/classes/Intance.cpp
+ * Provides an instantiation of an IEntity class that was based on a Prototype
+ * IEntity class.
+ * @file src/GQE/Entity/classes/Instance.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
  */

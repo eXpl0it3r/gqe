@@ -17,6 +17,7 @@
  *                  handling of Assets using the new IAssetHandler classes.
  * @date 20120514 - Fix comment whitespace and added GetID method call
  * @date 20120523 - Remove GQE_API from template classes to fix linker issues
+ * @date 20120616 - Add default constructor and fixed assignment operator issues
  */
 #ifndef   CORE_TASSET_HPP_INCLUDED
 #define   CORE_TASSET_HPP_INCLUDED
@@ -48,6 +49,18 @@ namespace GQE
         mAssetHandler(IApp::GetApp()->mAssetManager.GetHandler<TYPE>()),
         mAsset(mAssetHandler.GetReference(theAssetID, theLoadTime, theLoadStyle, theDropTime)),
         mAssetID(theAssetID)
+      {
+      }
+
+      /**
+       * TAsset default constructor that can be used if there is no way that
+       * theAssetID can be provided at construction time. You will need to call
+       * the SetID method before calling the GetAsset method if you use this
+       * constructor.
+       */
+      TAsset() :
+        mAssetHandler(IApp::GetApp()->mAssetManager.GetHandler<TYPE>()),
+        mAsset(mAssetHandler.GetReference())
       {
       }
 
@@ -225,23 +238,34 @@ namespace GQE
        * incrementing the reference count for this asset.
        * @param[in] theRight hand side of the = operation
        */
-      TAsset<TYPE>& operator=(const TAsset<TYPE>& theRight)
+      TAsset<TYPE>& operator=(TAsset<TYPE> theRight)
       {
-        // Use copy constructor to duplicate theRight side
-        //TAsset anCopy(theRight);
-
-        // Now swap my local copy with anCopy made above
-        //std::swap(mAssetHandler, anCopy.mAssetHandler);
-        //std::swap(mAsset, anCopy.mAsset);
-        //std::swap(mAssetID, anCopy.mAssetID);
+        // Now swap my local copy with theRight copy made during the call to this method
+        swap(*this, theRight);
 
         // Increment the reference count to this Asset
-        //mAssetHandler.GetReference(mAssetID);
+        mAssetHandler.GetReference(mAssetID);
 
         // Return my pointer
         return *this;
       }
 
+      /**
+       * swap was created according to the copy-and-swap idiom necessary for
+       * correctly handling the assignment operator and copy constructor for a
+       * resource holding class like TAsset. This allows us to perform
+       * reference counting correctly for our TAsset resources.
+       */
+      friend void swap(TAsset& first, TAsset& second)
+      {
+        // enable ADL
+        using std::swap;
+
+        // Swap our asset pointer and ID
+        swap(first.mAsset, second.mAsset);
+        swap(first.mAssetID, second.mAssetID);
+        // The mAssetHandler is already handled at construction time
+      }
     protected:
       // Variables
       ///////////////////////////////////////////////////////////////////////////

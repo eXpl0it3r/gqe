@@ -1,31 +1,32 @@
 /**
-* The IComponent interface class used for all derived IComponent entities that
-* can be added to an IEntity class.
-*
-* @file include/GQE/Entity/interfaces/IComponent.hpp
-* @author Jacob Dix
-* @date 20120417 - Initial Release
-*/
+ * Provides the MovementSystem class for handing all entity movement in a game.
+ *
+ * @file src/GQE/Entity/systems/MovementSystem.cpp
+ * @author Jacob Dix
+ * @date 20120611 - Initial Release
+ * @date 20120616 - Adjustments for new PropertyManager class
+ */
 #ifndef MOVEMENT_SYSTEM_HPP_INCLUDED
 #define MOVEMENT_SYSTEM_HPP_INCLUDED
 
 #include <GQE/Entity/interfaces/ISystem.hpp>
 namespace GQE
 {
-	/// The component interface class used by all IEntity derived classes
+	/// The MovementSystem for managing all IEntity movement in a game
 	class GQE_API MovementSystem : public ISystem
 	{
 	public:
 		/**
-		RenderSystem Constructor.
-		@param[in] theApp is the Current GQE App.
-		**/
+     * MovementSystem Constructor.
+		 * @param[in] theApp is the current GQE app.
+		 */
 		MovementSystem(IApp& theApp);
 
 		/**
-		ISystem Destructor.
-		**/
-		~MovementSystem();
+     * MovementSystme Destructor.
+		 */
+		virtual ~MovementSystem();
+
 		/**
 		* InitInstance is called when an instance is added to the system.
 		* @Param[in] theInstance is the new instance added.
@@ -81,30 +82,27 @@ namespace GQE
 #endif // ICOMPONENT_HPP_INCLUDED
 
 /**
-* @class GQE::ISystem
-* @ingroup Entity
-* The ISystem class represents the interface used by all Components that
-* can be added to an IEntity derived class. Components enable IEntity classes
-* to differ from each other without requiring the game designer to create
-* complicated inheritance models for all their game entities.
-*
-* Copyright (c) 2010-2012 Jacob Dix
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documentation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to whom the Software is
-* furnished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
-*/
-
+ * @class GQE::MovementSystem
+ * @ingroup Entity
+ * The MovementSystem class represents the system used to manage movement of all
+ * Instance classes in a game.
+ *
+ * Copyright (c) 2010-2012 Jacob Dix
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */

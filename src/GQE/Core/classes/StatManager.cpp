@@ -19,6 +19,7 @@
  * @date 20120512 - Renamed App to IApp since it really is just an interface
  * @date 20120518 - Use sf::Font instead of FontAsset to remove circular dependency
  * @date 20120609 - Whitespace changes
+ * @date 20120616 - Add std::nothrow to new commands for mFPS and mUPS
  */
 
 #include <assert.h>
@@ -70,11 +71,11 @@ namespace GQE
     mUpdateClock.Reset();
 
     // Position and color for the FPS/UPS string
-    mFPS = new sf::String("", mDefaultFont, 30.0F);
+    mFPS = new(std::nothrow) sf::String("", mDefaultFont, 30.0F);
     mFPS->SetColor(sf::Color(255,255,255,128));
     mFPS->SetPosition(0,0);
     
-    mUPS = new sf::String("", mDefaultFont, 30.0F);
+    mUPS = new(std::nothrow) sf::String("", mDefaultFont, 30.0F);
     mUPS->SetColor(sf::Color(255,255,255,128));
     mUPS->SetPosition(0,30);
 #else
@@ -82,11 +83,11 @@ namespace GQE
     mUpdateClock.restart();
 
     // Position and color for the FPS/UPS string
-    mFPS = new sf::Text("", mDefaultFont, 30);
+    mFPS = new(std::nothrow) sf::Text("", mDefaultFont, 30);
     mFPS->setColor(sf::Color(255,255,255,128));
     mFPS->setPosition(0,0);
 
-    mUPS = new sf::Text("", mDefaultFont, 30);
+    mUPS = new(std::nothrow) sf::Text("", mDefaultFont, 30);
     mUPS->setColor(sf::Color(255,255,255,128));
     mUPS->setPosition(0,30);
 #endif

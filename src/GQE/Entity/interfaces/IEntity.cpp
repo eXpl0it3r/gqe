@@ -4,6 +4,7 @@
  * @file src/GQE/Entity/interfaces/IEntity.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
+ * @date 20120609 - Move property methods to new PropertyManager class
  */
 #include <GQE/Entity/interfaces/IEntity.hpp>
 #include <GQE/Entity/interfaces/ISystem.hpp>
@@ -16,34 +17,18 @@ namespace GQE
 
   IEntity::~IEntity()
   {
-    std::map<const typePropertyID, IProperty*>::iterator anProptertyIter;
-    for(anProptertyIter=mPropertyList.begin();
-        anProptertyIter!=mPropertyList.end();
-        ++anProptertyIter)
-    {
-      IProperty* anProperty = (anProptertyIter->second);
-      delete anProperty;
-      anProperty = NULL;
-    }
   }
 
-  void IEntity::AddProperty(IProperty* theProperty)
-  {
-    if(mPropertyList.find(theProperty->GetID())!=mPropertyList.end())
-    {
-      ELOG() << "Entity:AddProperty() property(" << theProperty->GetID() << ") " << std::endl;
-      return;
-    }
-    mPropertyList[theProperty->GetID()]=theProperty;
-  }
 	void IEntity::AddSystem(ISystem* theSystem)
 	{
-		if(mSystemList.find(theSystem->GetID())!=mSystemList.end())
+		if(mSystemList.find(theSystem->GetID())==mSystemList.end())
     {
-      ELOG() << "Entity:AddProperty() property(" << theSystem->GetID() << ") is already controling this entity." << std::endl;
-      return;
+      mSystemList[theSystem->GetID()]=theSystem;
     }
-    mSystemList[theSystem->GetID()]=theSystem;
+    else
+    {
+      WLOG() << "IEntity:AddSystem() system(" << theSystem->GetID() << ") is already controling this entity." << std::endl;
+    }
 	}
 } // namespace GQE
 

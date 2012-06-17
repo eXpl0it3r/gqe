@@ -14,6 +14,7 @@
  * @date 20120322 - Support new SFML2 snapshot changes
  * @date 20120512 - Use new RAII Asset and Asset Handler management style
  * @date 20120514 - Add default constructor for missing Asset ID at construction
+ * @date 20120615 - Add default constructor call to TAsset default constructor
  */
 
 #include <assert.h>
@@ -23,6 +24,15 @@
 
 namespace GQE
 {
+	ImageAsset::ImageAsset() :
+#if (SFML_VERSION_MAJOR < 2)
+    TAsset<sf::Image>()
+#else
+    TAsset<sf::Texture>()
+#endif
+  {
+  }
+
   ImageAsset::ImageAsset(const typeAssetID theAssetID,
      AssetLoadTime theLoadTime, AssetLoadStyle theLoadStyle,
      AssetDropTime theDropTime) :
@@ -30,14 +40,6 @@ namespace GQE
     TAsset<sf::Image>(theAssetID, theLoadTime, theLoadStyle, theDropTime)
 #else
     TAsset<sf::Texture>(theAssetID, theLoadTime, theLoadStyle, theDropTime)
-#endif
-  {
-  }
-	ImageAsset::ImageAsset() :
-#if (SFML_VERSION_MAJOR < 2)
-    TAsset<sf::Image>("", GQE::AssetLoadLater, GQE::AssetLoadFromFile, GQE::AssetDropAtZero)
-#else
-    TAsset<sf::Texture>("", GQE::AssetLoadLater, GQE::AssetLoadFromFile, GQE::AssetDropAtZero)
 #endif
   {
   }

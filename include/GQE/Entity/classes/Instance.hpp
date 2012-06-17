@@ -4,6 +4,7 @@
  * @file include/GQE/Entity/classes/Instance.hpp>
  * @author Jacob Dix
  * @date 20120423 - Initial Release
+ * @date 20120616 - Fixed constructor parameter comments
  */
 #ifndef INSTANCE_HPP_INCLUDED
 #define INSTANCE_HPP_INCLUDED
@@ -18,7 +19,6 @@ namespace GQE
     public:
       /**
        * Instance default constructor
-       * @param[in] theInstanceID to use for this Instance
        * @param[in] thePrototype class address used to create this Instance class
        */
       Instance(Prototype& thePrototype);

@@ -1,5 +1,5 @@
 /**
- * Provides a system for storing entity wide custom property values.
+ * Provides a system for storing custom property values.
  *
  * @file include/GQE/Entity/interfaces/TProperty.hpp
  * @author Jacob Dix

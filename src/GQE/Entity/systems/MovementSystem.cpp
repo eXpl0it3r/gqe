@@ -1,8 +1,17 @@
+/**
+ * Provides the MovementSystem class for handing all entity movement in a game.
+ *
+ * @file src/GQE/Entity/systems/MovementSystem.cpp
+ * @author Jacob Dix
+ * @date 20120611 - Initial Release
+ * @date 20120616 - Adjustments for new PropertyManager class
+ */
 #include <GQE/Entity/systems/MovementSystem.hpp>
 #include <GQE/Core/assets/ImageAsset.hpp>
 #include <GQE/Entity/classes/Prototype.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
 #include <SFML/Graphics.hpp>
+
 namespace GQE
 {
 	MovementSystem::MovementSystem(IApp& theApp):
@@ -16,23 +25,24 @@ namespace GQE
 	}
 	void MovementSystem::RegisterPrototype(Prototype* thePrototype)
 	{
-		thePrototype->AddProperty<sf::Vector2f>("Velocity",sf::Vector2f(0,0));
-		thePrototype->AddProperty<sf::Vector2f>("Accelleration",sf::Vector2f(0,0));
-		thePrototype->AddProperty<float>("RotationalVelocity",0);
-		thePrototype->AddProperty<float>("RotationalAccelleration",0);
-		thePrototype->AddProperty<bool>("Warp",true);
+		thePrototype->mProperties.Add<sf::Vector2f>("Velocity",sf::Vector2f(0,0));
+		thePrototype->mProperties.Add<sf::Vector2f>("Accelleration",sf::Vector2f(0,0));
+		thePrototype->mProperties.Add<float>("RotationalVelocity",0);
+		thePrototype->mProperties.Add<float>("RotationalAccelleration",0);
+		thePrototype->mProperties.Add<bool>("Warp",true);
 		thePrototype->AddSystem(this);
 		ISystem::RegisterPrototype(thePrototype);
 	}
-	void MovementSystem::InitInstance(Instance* theInstance)
+	
+  void MovementSystem::InitInstance(Instance* theInstance)
 	{
-
 	}
-	void MovementSystem::HandleEvents(sf::Event theEvent)
+	
+  void MovementSystem::HandleEvents(sf::Event theEvent)
 	{
-
 	}
-	void MovementSystem::UpdateFixed()
+
+  void MovementSystem::UpdateFixed()
 	{
 		Instance* anInstance=NULL;
 		std::vector<Instance*>::iterator anInstanceIter;
@@ -48,12 +58,12 @@ namespace GQE
 			++anInstanceIter)
 		{
 			anInstance=(*anInstanceIter);
-			anPosition=anInstance->GetProperty<sf::Vector2f>("Position");
-			anVelocity=anInstance->GetProperty<sf::Vector2f>("Velocity");
-			anAccelleration=anInstance->GetProperty<sf::Vector2f>("Accelleration");
-			anRotation=anInstance->GetProperty<float>("Rotation");
-			anRotationalVelocity=anInstance->GetProperty<float>("RotationalVelocity");
-			anRotationalAccelleration=anInstance->GetProperty<float>("RotationalAccelleration");
+			anPosition=anInstance->mProperties.Get<sf::Vector2f>("Position");
+			anVelocity=anInstance->mProperties.Get<sf::Vector2f>("Velocity");
+			anAccelleration=anInstance->mProperties.Get<sf::Vector2f>("Accelleration");
+			anRotation=anInstance->mProperties.Get<float>("Rotation");
+			anRotationalVelocity=anInstance->mProperties.Get<float>("RotationalVelocity");
+			anRotationalAccelleration=anInstance->mProperties.Get<float>("RotationalAccelleration");
 			anVelocity+=anAccelleration;
 			anPosition+=anVelocity;
 			anRotationalVelocity+=anRotationalAccelleration;
@@ -64,7 +74,7 @@ namespace GQE
 			}
 			else if(anPosition.x<0)
 			{
-				anPosition.x=mApp.mWindow.getSize().x;
+				anPosition.x=(float)mApp.mWindow.getSize().x;
 			}
 			if(anPosition.y>mApp.mWindow.getSize().y)
 			{
@@ -72,24 +82,45 @@ namespace GQE
 			}
 			else if(anPosition.y<0)
 			{
-				anPosition.y=mApp.mWindow.getSize().y;
+				anPosition.y=(float)mApp.mWindow.getSize().y;
 			}
-			anInstance->SetProperty<sf::Vector2f>("Velocity",anVelocity);
-			anInstance->SetProperty<sf::Vector2f>("Position",anPosition);
-			anInstance->SetProperty<float>("Rotation",anRotation);
-			anInstance->SetProperty<float>("RotationalVelocity",anRotationalVelocity);
+			anInstance->mProperties.Set<sf::Vector2f>("Velocity",anVelocity);
+			anInstance->mProperties.Set<sf::Vector2f>("Position",anPosition);
+			anInstance->mProperties.Set<float>("Rotation",anRotation);
+			anInstance->mProperties.Set<float>("RotationalVelocity",anRotationalVelocity);
 		}
 	}
-	void MovementSystem::UpdateVariable(float theElaspedTime)
+	
+  void MovementSystem::UpdateVariable(float theElaspedTime)
 	{
-		
-	}
+  }
+
 	void MovementSystem::Draw()
 	{
-	
 	}
-	void MovementSystem::HandleCleanup()
-	{
 
+  void MovementSystem::HandleCleanup()
+	{
 	}
-}
+} // namespace GQE
+
+/**
+ * Copyright (c) 2010-2012 Jacob Dix
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */

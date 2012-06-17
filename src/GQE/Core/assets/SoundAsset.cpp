@@ -13,6 +13,7 @@
  * @date 20120322 - Support new SFML2 snapshot changes
  * @date 20120512 - Use new RAII Asset and Asset Handler management style
  * @date 20120514 - Add default constructor for missing Asset ID at construction
+ * @date 20120615 - Add default constructor call to TAsset default constructor
  */
 
 #include <assert.h>
@@ -22,6 +23,11 @@
 
 namespace GQE
 {
+  SoundAsset::SoundAsset() :
+    TAsset<sf::SoundBuffer>()
+  {
+  }
+
   SoundAsset::SoundAsset(const typeAssetID theAssetID,
     AssetLoadTime theLoadTime, AssetLoadStyle theLoadStyle,
     AssetDropTime theDropTime) :

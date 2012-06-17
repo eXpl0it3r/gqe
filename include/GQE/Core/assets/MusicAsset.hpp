@@ -12,6 +12,7 @@
  * @date 20110627 - Removed extra ; from namespace
  * @date 20120512 - Use new RAII Asset and Asset Handler management style
  * @date 20120514 - Add default constructor for missing Asset ID at construction
+ * @date 20120615 - Adjust comments for default constructor
  */
 #ifndef   CORE_MUSIC_ASSET_HPP_INCLUDED
 #define   CORE_MUSIC_ASSET_HPP_INCLUDED
@@ -27,8 +28,9 @@ namespace GQE
   {
     public:
       /**
-       * MusicAsset default constructor is used when you don't know the asset
-       * filename until later.
+       * MusicAsset default constructor is used when you don't know theAssetID
+       * until later. You must call the SetID method before calling the
+       * GetAsset method to prevent getting the DummyAsset instead.
        */
       MusicAsset();
 

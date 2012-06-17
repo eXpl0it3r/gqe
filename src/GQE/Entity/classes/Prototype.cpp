@@ -5,6 +5,7 @@
  * @file src/GQE/Entity/classes/Prototype.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
+ * @date 20120616 - Adjustments made for new PropertyManager
  */
 #include <GQE/Entity/classes/Prototype.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
@@ -30,15 +31,11 @@ namespace GQE
 
   Instance* Prototype::MakeInstance()
   {
-    Instance* anInstance=new Instance(*this);
-    std::map<const typePropertyID, IProperty*>::iterator anProptertyIter;
-		for(anProptertyIter=mPropertyList.begin();
-        anProptertyIter!=mPropertyList.end();
-        ++anProptertyIter)
-    {
-      IProperty* anProperty = (anProptertyIter->second);
-      anInstance->AddProperty(anProperty->MakeClone());
-    }
+    Instance* anInstance=new(std::nothrow) Instance(*this);
+
+    // Clone our Prototype properties into the new Instance class
+    anInstance->mProperties.Clone(mProperties);
+
     std::map<const typeSystemID, ISystem*>::iterator anSystemIter;
 		for(anSystemIter=mSystemList.begin();
         anSystemIter!=mSystemList.end();
@@ -48,6 +45,8 @@ namespace GQE
       anInstance->AddSystem(anSystem);
 			anSystem->AddInstance(anInstance);
     }
+
+    // Return the new Instance class created
     return anInstance;
   }
 } // namespace GQE

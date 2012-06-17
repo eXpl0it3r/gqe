@@ -2,12 +2,12 @@
  * Provides a system for Managing Prototype and Instance IEntity derived
  * classes.
  *
- * @file include/GQE/Entity/classes/EntityManager.hpp>
+ * @file include/GQE/Entity/classes/PrototypeManager.hpp>
  * @author Jacob Dix
  * @date 20120425 Initial Release
  */
-#ifndef ENTITY_MANAGER_HPP_INCLUDED
-#define ENTITY_MANAGER_HPP_INCLUDED
+#ifndef PROTOTYPE_MANAGER_HPP_INCLUDED
+#define PROTOTYPE_MANAGER_HPP_INCLUDED
 
 #include <map>
 #include <vector>
@@ -15,7 +15,7 @@
 
 namespace GQE
 {
-  /// Provides the EntityManager class for managing Prototype and Instance classes
+  /// Provides the PrototypeManager class for managing Prototype and Instance classes
   class GQE_API PrototypeManager
   {
     public:
@@ -59,12 +59,12 @@ namespace GQE
   };
 } // namespace GQE
 
-#endif
+#endif // PROTOTYPE_MANAGER_HPP_INCLUDED
 
 /**
- * @class GQE::EntityManager
+ * @class GQE::PrototypeManager
  * @ingroup Entity
- * The EntityManager class is responsible for providing management for
+ * The PrototypeManager class is responsible for providing management for
  * Prototype and Instance classes used for a game. It can be a variable in an
  * IApp derived class or a variable in an IState derived class depending on the
  * desired scope (game application wide or game state only wide).
@@ -88,4 +88,3 @@ namespace GQE
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-

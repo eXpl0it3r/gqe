@@ -1,8 +1,8 @@
 /**
- * Provides a system for Managing Prototype and Instance IEntity derived
+ * Provides a system for managing Prototype and Instance IEntity derived
  * classes.
  *
- * @file src/GQE/Entity/classes/EntityManager.cpp
+ * @file src/GQE/Entity/classes/PrototypeManager.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
  */

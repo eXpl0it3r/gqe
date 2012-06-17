@@ -4,6 +4,7 @@
  * @file include/GQE/Entity/Entity_types.hpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
+ * @date 20120616 - Fixed typedef comments
  */
 #ifndef ENTITY_TYPES_HPP_INCLUDED
 #define ENTITY_TYPES_HPP_INCLUDED
@@ -21,6 +22,7 @@ namespace GQE
   // Forward declare GQE Entity classes provided
   class Prototype;
   class Instance;
+  class PropertyManager;
   class PrototypeManager;
 
   /// Declare Property ID typedef which is used for identifying Properties
@@ -29,7 +31,7 @@ namespace GQE
   /// Declare Prototype ID typedef which is used for identifying Entity Prototype objects
   typedef std::string typePrototypeID;
 
-  /// Declare Prototype ID typedef which is used for identifying Entity Prototype objects
+  /// Declare System ID typedef which is used for identifying ISystem objects
   typedef std::string typeSystemID;
 
 	/// Declare Entity ID typedef which is used for identifying Entity objects

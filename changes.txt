@@ -1,3 +1,9 @@
+Version 0.21.0
+==============
+- Created PropertyManager class
+- New entities architecture to improve performance
+- Fixed missing assignment operator for TAsset class
+
 Version 0.20.0
 ==============
 - Revamp of game loop algorithm and default to windowed mode

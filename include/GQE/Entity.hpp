@@ -5,6 +5,7 @@
  * @file include/GQE/Entity.hpp
  * @author Jacob Dix
  * @date 20100423 - Initial Release
+ * @date 20120616 - Added PropertyManager class
  */
 #ifndef ENTITY_HPP_INCLUDED
 #define ENTITY_HPP_INCLUDED
@@ -15,6 +16,7 @@
 #include <GQE/Config.hpp>
 
 // GQE Entity includes
+#include <GQE/Entity/classes/PropertyManager.hpp>
 #include <GQE/Entity/classes/PrototypeManager.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
 #include <GQE/Entity/classes/Prototype.hpp>
