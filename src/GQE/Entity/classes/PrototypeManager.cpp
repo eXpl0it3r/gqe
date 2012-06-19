@@ -5,27 +5,36 @@
  * @file src/GQE/Entity/classes/PrototypeManager.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
+ * @date 20120618 - Changed name from mPrototypeList to mPrototypes
  */
 #include <GQE/Entity/classes/PrototypeManager.hpp>
 #include <GQE/Entity/classes/Prototype.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
+#include <GQE/Core/loggers/Log_macros.hpp>
 
 namespace GQE
 {
   PrototypeManager::PrototypeManager()
   {
-
+    ILOG() << "PrototypeManager::ctor()" << std::endl;
   }
 
   PrototypeManager::~PrototypeManager()
   {
+    ILOG() << "PrototypeManager::dtor()" << std::endl;
   }
 
   void PrototypeManager::AddPrototype(Prototype* thePrototype)
   {
-    if(thePrototype==NULL)
-      return;
-    mPrototypeList[thePrototype->GetID()]=thePrototype;
+    // Make sure a NULL prototype pointer wasn't provided
+    if(thePrototype != NULL)
+    {
+      mPrototypes[thePrototype->GetID()]=thePrototype;
+    }
+    else
+    {
+      ELOG() << "PrototypeManager::AddPrototype() Null pointer provided!" << std::endl;
+    }
   }
 
 
@@ -33,9 +42,13 @@ namespace GQE
   {
     Prototype* anResult = NULL;
 
-    if(mPrototypeList.find(thePrototypeID)!=mPrototypeList.end())
+    if(mPrototypes.find(thePrototypeID) != mPrototypes.end())
     {
-      anResult = mPrototypeList[thePrototypeID];
+      anResult = mPrototypes[thePrototypeID];
+    }
+    else
+    {
+      WLOG() << "PrototypeManager::GetPrototype(" << thePrototypeID << ") Not found!" << std::endl;
     }
 
     // Return anResult found (which might be NULL if none was found)

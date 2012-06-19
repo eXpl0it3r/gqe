@@ -5,6 +5,7 @@
  * @author Jacob Dix
  * @date 20120611 - Initial Release
  * @date 20120616 - Adjustments for new PropertyManager class
+ * @date 20120618 - Use IEntity not Instance and changed AddPrototype to AddProperties
  */
 #ifndef MOVEMENT_SYSTEM_HPP_INCLUDED
 #define MOVEMENT_SYSTEM_HPP_INCLUDED
@@ -27,59 +28,55 @@ namespace GQE
 		 */
 		virtual ~MovementSystem();
 
+    /**
+     * AddProperties is responsible for adding the properties used by this
+     * ISystem derived class to the IEntity derived class provided.
+     * @param[in] theEntity to add the properties too.
+     */
+    virtual void AddProperties(IEntity* theEntity);
+
 		/**
-		* InitInstance is called when an instance is added to the system.
-		* @Param[in] theInstance is the new instance added.
-		*/
-		virtual void InitInstance(Instance* theInstance);
-		/**
-		* RegisterPrototype is responsible for adding the properties to a prototype.
-		* @param[in] thePrototype is the prototype to use.
-		*/
-		virtual void RegisterPrototype(Prototype* thePrototype);
-		
-		/**
-		* HandleEvents is responsible for letting each Instance class have a
-		* chance to handle theEvent specified.
-		* @param[in] theEvent to handle
-		*/
+		 * HandleEvents is responsible for letting each Instance class have a
+		 * chance to handle theEvent specified.
+		 * @param[in] theEvent to handle
+		 */
 		virtual void HandleEvents(sf::Event theEvent);
 
 		/**
-		* UpdateFixed is called a specific number of times every game loop and
-		* this method will allow each Instance class a chance to have its
-		* UpdateFixed method called for each game loop iteration.
-		*/
+		 * UpdateFixed is called a specific number of times every game loop and
+		 * this method will allow each Instance class a chance to have its
+		 * UpdateFixed method called for each game loop iteration.
+		 */
 		virtual void UpdateFixed(void);
 
 		/**
-		* UpdateVariable is called every time the game loop draws a frame and
-		* includes the elapsed time between the last UpdateVariable call for
-		* use with equations that use time as a variable. (e.g. physics velocity
-		* and acceleration equations).
-		*/
+		 * UpdateVariable is called every time the game loop draws a frame and
+		 * includes the elapsed time between the last UpdateVariable call for
+		 * use with equations that use time as a variable. (e.g. physics velocity
+		 * and acceleration equations).
+		 */
 		virtual void UpdateVariable(float theElapsedTime);
 
 		/**
-		* Draw is called during the game loop after events and the fixed update
-		* loop calls are completed and depends largely on the speed of the
-		* computer to determine how frequently it will be called. This gives the
-		* EntityManager a chance to call the Draw method for each Instance
-		* class.
-		*/
+		 * Draw is called during the game loop after events and the fixed update
+		 * loop calls are completed and depends largely on the speed of the
+		 * computer to determine how frequently it will be called. This gives the
+		 * EntityManager a chance to call the Draw method for each Instance
+		 * class.
+		 */
 		virtual void Draw(void);
 
 		/**
-		* HandleCleanup will be called during the game loop or IState shutdown
-		* process and gives a chance for each Instance and Prototype class an
-		* opportunity to clean up any loose ends and free up memory resources.
-		*/
+		 * HandleCleanup will be called during the game loop or IState shutdown
+		 * process and gives a chance for each Instance and Prototype class an
+		 * opportunity to clean up any loose ends and free up memory resources.
+		 */
 		virtual void HandleCleanup(void);
 	private:
 	};
 } // namespace GQE
 
-#endif // ICOMPONENT_HPP_INCLUDED
+#endif // MOVEMENT_SYSTEM_HPP_INCLUDED
 
 /**
  * @class GQE::MovementSystem

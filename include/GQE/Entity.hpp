@@ -6,6 +6,7 @@
  * @author Jacob Dix
  * @date 20100423 - Initial Release
  * @date 20120616 - Added PropertyManager class
+ * @date 20120618 - Added missing Entity classes
  */
 #ifndef ENTITY_HPP_INCLUDED
 #define ENTITY_HPP_INCLUDED
@@ -20,10 +21,13 @@
 #include <GQE/Entity/classes/PrototypeManager.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
 #include <GQE/Entity/classes/Prototype.hpp>
-#include "GQE/Entity/interfaces/IEntity.hpp"
-#include <GQE/Entity/interfaces/TProperty.hpp>
+#include <GQE/Entity/interfaces/IEntity.hpp>
+#include <GQE/Entity/interfaces/IProperty.hpp>
 #include <GQE/Entity/interfaces/ISystem.hpp>
+#include <GQE/Entity/interfaces/TProperty.hpp>
 #include <GQE/Entity/systems/RenderSystem.hpp>
+#include <GQE/Entity/systems/MovementSystem.hpp>
+
 #endif // ENTITY_HPP_INCLUDED
 
 /**

@@ -4,6 +4,7 @@
  * @file src/GQE/Entity/classes/Instance.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
+ * @date 20120618 - Move ID related stuff to IEntity base class
  */
 #include <GQE/Entity/classes/Prototype.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
@@ -11,8 +12,6 @@
 namespace GQE
 {
   Instance::Instance(Prototype& thePrototype) :
-    IEntity(),
-    mInstanceID(ISystem::UseNextID()),
     mPrototype(thePrototype)
   {
 
@@ -20,12 +19,6 @@ namespace GQE
 
   Instance::~Instance()
   {
-
-  }
-
-  const typeInstanceID Instance::GetID() const
-  {
-    return mInstanceID;
   }
 
   Prototype& Instance::GetPrototype()

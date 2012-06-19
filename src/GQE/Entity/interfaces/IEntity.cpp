@@ -5,19 +5,34 @@
  * @author Jacob Dix
  * @date 20120423 - Initial Release
  * @date 20120609 - Move property methods to new PropertyManager class
+ * @date 20120618 - Moved ID from Instance class to this base class
  */
 #include <GQE/Entity/interfaces/IEntity.hpp>
 #include <GQE/Entity/interfaces/ISystem.hpp>
 namespace GQE
 {
+	typeEntityID IEntity::mNextID = 0;
 
-  IEntity::IEntity()
+  IEntity::IEntity() :
+    mEntityID(UseNextID())
   {
+    ILOG() << "IEntity::ctor(" << mEntityID << ")" << std::endl;
   }
 
   IEntity::~IEntity()
   {
+    ILOG() << "IEntity::dtor(" << mEntityID << ")" << std::endl;
   }
+
+  const typeEntityID IEntity::GetID() const
+  {
+    return mEntityID;
+  }
+
+	typeEntityID IEntity::UseNextID()
+	{
+		return ++mNextID;
+	}
 
 	void IEntity::AddSystem(ISystem* theSystem)
 	{
@@ -27,7 +42,8 @@ namespace GQE
     }
     else
     {
-      WLOG() << "IEntity:AddSystem() system(" << theSystem->GetID() << ") is already controling this entity." << std::endl;
+      WLOG() << "IEntity:AddSystem() system(" << theSystem->GetID()
+        << ") is already controlling this entity." << std::endl;
     }
 	}
 } // namespace GQE

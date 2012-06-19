@@ -16,12 +16,10 @@ namespace GQE
     IEntity(),
     mPrototypeID(thePrototypeID)
   {
-
   }
 
   Prototype::~Prototype()
   {
-
   }
 
   const typePrototypeID Prototype::GetID(void) const
@@ -31,11 +29,12 @@ namespace GQE
 
   Instance* Prototype::MakeInstance()
   {
-    Instance* anInstance=new(std::nothrow) Instance(*this);
+    Instance* anInstance = new(std::nothrow) Instance(*this);
 
     // Clone our Prototype properties into the new Instance class
     anInstance->mProperties.Clone(mProperties);
 
+    // Make sure the new Instance is registered with the same systems
     std::map<const typeSystemID, ISystem*>::iterator anSystemIter;
 		for(anSystemIter=mSystemList.begin();
         anSystemIter!=mSystemList.end();
@@ -43,7 +42,7 @@ namespace GQE
     {
       ISystem* anSystem = (anSystemIter->second);
       anInstance->AddSystem(anSystem);
-			anSystem->AddInstance(anInstance);
+			anSystem->AddEntity(anInstance);
     }
 
     // Return the new Instance class created

@@ -5,6 +5,7 @@
  * @author Jacob Dix
  * @date 20120611 - Initial Release
  * @date 20120616 - Adjustments for new PropertyManager class
+ * @date 20120618 - Use IEntity not Instance and changed AddPrototype to AddProperties
  */
 #ifndef RENDER_SYSTEM_HPP_INCLUDED
 #define RENDER_SYSTEM_HPP_INCLUDED
@@ -27,17 +28,12 @@ namespace GQE
 		 */
 		virtual ~RenderSystem();
 
-		/**
-		 * InitInstance is called when an instance is added to the system.
-		 * @Param[in] theInstance is the new instance added.
-		 */
-		virtual void InitInstance(Instance* theInstance);
-
-		/**
-		 * RegisterPrototype is responsible for adding the properties to a prototype.
-		 * @param[in] thePrototype is the prototype to use.
-		 */
-		virtual void RegisterPrototype(Prototype* thePrototype);
+    /**
+     * AddProperties is responsible for adding the properties used by this
+     * ISystem derived class to the IEntity derived class provided.
+     * @param[in] theEntity to add the properties too.
+     */
+    virtual void AddProperties(IEntity* theEntity);
 		
 		/**
 		 * HandleEvents is responsible for letting each Instance class have a

@@ -7,6 +7,7 @@
  * @date 20120507 - Changed how properties are retrived/set.
  * @date 20120519 - Renaimed Entity class to IEntity and moved to interfaces folder.
  * @date 20120609 - Moved property methods to new PropertyManager class
+ * @date 20120618 - Moved ID from Instance class to this base class
  */
 #ifndef IENTITY_HPP_INCLUDED
 #define IENTITY_HPP_INCLUDED
@@ -36,6 +37,18 @@ namespace GQE
        */
       virtual ~IEntity();
 
+      /**
+       * GetID will return the Entity ID used by this IEntity class.
+       * @return the entity ID for this IEntity class
+       */
+      const typeEntityID GetID() const;
+
+		  /**
+		   * UseNextID Gets the next available Entity ID.
+		   * @return an ID of an IEntity;
+		   */
+		  static typeEntityID UseNextID();
+
 			/**
        * AddSystem adds a dependant system to the entity.
        * @param[in] theSystem is a pointer to the active system.
@@ -44,8 +57,12 @@ namespace GQE
     protected:
       // Variables
       ///////////////////////////////////////////////////////////////////////////
+      /// The entity ID assigned to this IEntity class
+      const typeEntityID mEntityID;
 			//A list of systems this entity is controlled by
-			std::map<const typeSystemID,ISystem*> mSystemList;
+			std::map<const typeSystemID, ISystem*> mSystemList;
+		  /// The next ID to assign to a new Instance class
+		  static typeEntityID mNextID;
   };
 }
 

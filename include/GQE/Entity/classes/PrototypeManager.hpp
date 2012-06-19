@@ -4,7 +4,8 @@
  *
  * @file include/GQE/Entity/classes/PrototypeManager.hpp>
  * @author Jacob Dix
- * @date 20120425 Initial Release
+ * @date 20120425 - Initial Release
+ * @date 20120618 - Changed name from mPrototypeList to mPrototypes
  */
 #ifndef PROTOTYPE_MANAGER_HPP_INCLUDED
 #define PROTOTYPE_MANAGER_HPP_INCLUDED
@@ -44,18 +45,13 @@ namespace GQE
        * @return the pointer to the Prototype class specified
        */
       Prototype* GetPrototype(const typePrototypeID thePrototypeID);
-
-      
-
     protected:
 
     private:
       // Variables
       ///////////////////////////////////////////////////////////////////////////
-
       /// A map of Prototype classes managed by the EntityManager
-      std::map<const typePrototypeID, Prototype*> mPrototypeList;
-
+      std::map<const typePrototypeID, Prototype*> mPrototypes;
   };
 } // namespace GQE
 

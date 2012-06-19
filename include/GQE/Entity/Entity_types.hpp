@@ -5,6 +5,7 @@
  * @author Jacob Dix
  * @date 20120423 - Initial Release
  * @date 20120616 - Fixed typedef comments
+ * @date 20120618 - Changed name from typeInstanceID to typeEntityID
  */
 #ifndef ENTITY_TYPES_HPP_INCLUDED
 #define ENTITY_TYPES_HPP_INCLUDED
@@ -34,8 +35,8 @@ namespace GQE
   /// Declare System ID typedef which is used for identifying ISystem objects
   typedef std::string typeSystemID;
 
-	/// Declare Entity ID typedef which is used for identifying Entity objects
-  typedef Uint32 typeInstanceID;
+	/// Declare Entity ID typedef which is used for identifying IEntity objects
+  typedef Uint32 typeEntityID;
 }
 #endif // ENTITY_TYPES_HPP_INCLUDED
 

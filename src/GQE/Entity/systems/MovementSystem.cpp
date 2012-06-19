@@ -5,37 +5,32 @@
  * @author Jacob Dix
  * @date 20120611 - Initial Release
  * @date 20120616 - Adjustments for new PropertyManager class
+ * @date 20120618 - Use IEntity not Instance and changed AddPrototype to AddProperties
  */
+#include <SFML/Graphics.hpp>
 #include <GQE/Entity/systems/MovementSystem.hpp>
 #include <GQE/Core/assets/ImageAsset.hpp>
 #include <GQE/Entity/classes/Prototype.hpp>
 #include <GQE/Entity/classes/Instance.hpp>
-#include <SFML/Graphics.hpp>
 
 namespace GQE
 {
 	MovementSystem::MovementSystem(IApp& theApp):
 		ISystem("MovementSystem",theApp)
 	{
-		
 	}
 	MovementSystem::~MovementSystem()
 	{
+	}
 
-	}
-	void MovementSystem::RegisterPrototype(Prototype* thePrototype)
+  void MovementSystem::AddProperties(IEntity* theEntity)
 	{
-		thePrototype->mProperties.Add<sf::Vector2f>("Velocity",sf::Vector2f(0,0));
-		thePrototype->mProperties.Add<sf::Vector2f>("Accelleration",sf::Vector2f(0,0));
-		thePrototype->mProperties.Add<float>("RotationalVelocity",0);
-		thePrototype->mProperties.Add<float>("RotationalAccelleration",0);
-		thePrototype->mProperties.Add<bool>("Warp",true);
-		thePrototype->AddSystem(this);
-		ISystem::RegisterPrototype(thePrototype);
-	}
-	
-  void MovementSystem::InitInstance(Instance* theInstance)
-	{
+		theEntity->mProperties.Add<sf::Vector2f>("Velocity",sf::Vector2f(0,0));
+		theEntity->mProperties.Add<sf::Vector2f>("Accelleration",sf::Vector2f(0,0));
+		theEntity->mProperties.Add<float>("RotationalVelocity",0);
+		theEntity->mProperties.Add<float>("RotationalAccelleration",0);
+		theEntity->mProperties.Add<bool>("Warp",true);
+		theEntity->AddSystem(this);
 	}
 	
   void MovementSystem::HandleEvents(sf::Event theEvent)
@@ -44,26 +39,18 @@ namespace GQE
 
   void MovementSystem::UpdateFixed()
 	{
-		Instance* anInstance=NULL;
-		std::vector<Instance*>::iterator anInstanceIter;
-		sf::Vector2f anPosition;
-		sf::Vector2f anVelocity;
-		sf::Vector2f anAccelleration;
-		float anRotation;
-		float anRotationalVelocity;
-		float anRotationalAccelleration;
-
-		for(anInstanceIter=mInstanceList.begin();
-			anInstanceIter!=mInstanceList.end();
-			++anInstanceIter)
+		std::vector<IEntity*>::iterator anEntityIter;
+		for(anEntityIter=mEntities.begin();
+			anEntityIter!=mEntities.end();
+			++anEntityIter)
 		{
-			anInstance=(*anInstanceIter);
-			anPosition=anInstance->mProperties.Get<sf::Vector2f>("Position");
-			anVelocity=anInstance->mProperties.Get<sf::Vector2f>("Velocity");
-			anAccelleration=anInstance->mProperties.Get<sf::Vector2f>("Accelleration");
-			anRotation=anInstance->mProperties.Get<float>("Rotation");
-			anRotationalVelocity=anInstance->mProperties.Get<float>("RotationalVelocity");
-			anRotationalAccelleration=anInstance->mProperties.Get<float>("RotationalAccelleration");
+			IEntity* anEntity = (*anEntityIter);
+			sf::Vector2f anPosition=anEntity->mProperties.Get<sf::Vector2f>("Position");
+			sf::Vector2f anVelocity=anEntity->mProperties.Get<sf::Vector2f>("Velocity");
+			sf::Vector2f anAccelleration=anEntity->mProperties.Get<sf::Vector2f>("Accelleration");
+			float anRotation=anEntity->mProperties.Get<float>("Rotation");
+			float anRotationalVelocity=anEntity->mProperties.Get<float>("RotationalVelocity");
+			float anRotationalAccelleration=anEntity->mProperties.Get<float>("RotationalAccelleration");
 			anVelocity+=anAccelleration;
 			anPosition+=anVelocity;
 			anRotationalVelocity+=anRotationalAccelleration;
@@ -84,10 +71,10 @@ namespace GQE
 			{
 				anPosition.y=(float)mApp.mWindow.getSize().y;
 			}
-			anInstance->mProperties.Set<sf::Vector2f>("Velocity",anVelocity);
-			anInstance->mProperties.Set<sf::Vector2f>("Position",anPosition);
-			anInstance->mProperties.Set<float>("Rotation",anRotation);
-			anInstance->mProperties.Set<float>("RotationalVelocity",anRotationalVelocity);
+			anEntity->mProperties.Set<sf::Vector2f>("Velocity",anVelocity);
+			anEntity->mProperties.Set<sf::Vector2f>("Position",anPosition);
+			anEntity->mProperties.Set<float>("Rotation",anRotation);
+			anEntity->mProperties.Set<float>("RotationalVelocity",anRotationalVelocity);
 		}
 	}
 	

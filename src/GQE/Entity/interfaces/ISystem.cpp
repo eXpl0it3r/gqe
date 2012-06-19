@@ -5,6 +5,7 @@
  * @file src/GQE/Entity/interfaces/ISystem.cpp
  * @author Jacob Dix
  * @date 20120423 - Initial Release
+ * @date 20120618 - Use IEntity not Instance and changed AddPrototype to AddProperties
  */
 #include <assert.h>
 #include <GQE/Entity/interfaces/ISystem.hpp>
@@ -13,46 +14,36 @@
 #include <GQE/Entity/classes/PrototypeManager.hpp>
 namespace GQE
 {
-	typeInstanceID ISystem::mNextID=0;
-	PrototypeManager* ISystem::gPrototypeManager=NULL;
-  ISystem::ISystem(const typeSystemID theSystemID , IApp& theApp) :
+  ISystem::ISystem(const typeSystemID theSystemID, IApp& theApp) :
     mApp(theApp),
     mSystemID(theSystemID)
   {
     ILOG() << "ISystem::ctor(" << mSystemID << ")" << std::endl;
-		if(gPrototypeManager==NULL)
-		{
-			gPrototypeManager=new PrototypeManager();
-		}
   }
 
   ISystem::~ISystem()
   {
     ILOG() << "ISystem::dtor(" << mSystemID << ")" << std::endl;
   }
-	typeInstanceID ISystem::AddInstance(Instance* theInstance)
-	{
-		int anResult=0;
-		if(theInstance!=NULL)
-		{
-			mInstanceList.push_back(theInstance);
-			anResult=theInstance->GetID();
-		}
-		return anResult;
-	}
-	typeInstanceID ISystem::UseNextID()
-	{
-		mNextID++;
-		return mNextID;
-	}
 
   const typeSystemID ISystem::GetID(void) const
   {
     return mSystemID;
   }
-	void ISystem::RegisterPrototype(Prototype* thePrototype)
+
+	const typeEntityID ISystem::AddEntity(IEntity* theEntity)
 	{
-		gPrototypeManager->AddPrototype(thePrototype);
+		typeEntityID anResult = 0;
+		if(theEntity != NULL)
+		{
+			mEntities.push_back(theEntity);
+			anResult = theEntity->GetID();
+		}
+    else
+    {
+      ELOG() << "ISystem::AddEntity() Null Entity pointer provided!" << std::endl;
+    }
+		return anResult;
 	}
 } // namespace GQE
 

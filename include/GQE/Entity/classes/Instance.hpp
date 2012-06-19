@@ -5,6 +5,7 @@
  * @author Jacob Dix
  * @date 20120423 - Initial Release
  * @date 20120616 - Fixed constructor parameter comments
+ * @date 20120618 - Move ID related stuff to IEntity base class
  */
 #ifndef INSTANCE_HPP_INCLUDED
 #define INSTANCE_HPP_INCLUDED
@@ -29,12 +30,6 @@ namespace GQE
       virtual ~Instance();
 
       /**
-       * GetID will return the Instance ID used by this Instance class.
-       * @return the instance ID for this Instance class
-       */
-      const typeInstanceID GetID() const;
-
-      /**
        * GetPrototype will return the Prototype class used to create this
        * Instance class, so you can create another Instance if desired.
        * @return a pointer to the Prototype class used to create this Instance
@@ -43,8 +38,6 @@ namespace GQE
     private:
       // Variables
       ///////////////////////////////////////////////////////////////////////////
-      /// The instance ID assigned to this Instance class
-      const typeInstanceID mInstanceID;
       /// The address to the Prototype class used to create this Instance
       Prototype& mPrototype;
   };

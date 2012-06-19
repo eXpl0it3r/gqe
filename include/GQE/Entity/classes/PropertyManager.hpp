@@ -5,7 +5,7 @@
  *
  * @file include/GQE/Entity/classes/PropertyManager.hpp
  * @author Jacob Dix
- * @date 20120615 Initial Release
+ * @date 20120615 - Initial Release
  */
 #ifndef PROPERTY_MANAGER_HPP_INCLUDED
 #define PROPERTY_MANAGER_HPP_INCLUDED
