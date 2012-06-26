@@ -116,7 +116,7 @@ namespace GQE
         if(anFrameModifier.x > 0)
         {
           anSpriteRect.left += anSpriteRect.width*anFrameModifier.x;
-          if(anSpriteRect.left > anFrameRect.left+anFrameRect.width)
+          if(anSpriteRect.left >= anFrameRect.left+anFrameRect.width)
           {
             anSpriteRect.left = anFrameRect.left;
           }
@@ -125,7 +125,7 @@ namespace GQE
         if(anFrameModifier.y > 0)
         {
           anSpriteRect.top += anSpriteRect.height*anFrameModifier.y;
-          if(anSpriteRect.top > anFrameRect.top+anFrameRect.height)
+          if(anSpriteRect.top >= anFrameRect.top+anFrameRect.height)
           {
             anSpriteRect.top = anFrameRect.top;
           }
