@@ -26,9 +26,9 @@ namespace GQE
     theEntity->mProperties.Add<sf::Clock>("FrameClock",sf::Clock());	
     theEntity->mProperties.Add<float>("fFrameDelay",0.0f);
 #if (SFML_VERSION_MAJOR < 2)
-    theEntity->mProperties.Add<sf::Vector2i>("vFrameModifier",sf::Vector2i(0,0));	
+    theEntity->mProperties.Add<sf::Vector2u>("wFrameModifier",sf::Vector2u(0,0));	
 #else
-    theEntity->mProperties.Add<sf::Vector2u>("vFrameModifier",sf::Vector2u(0,0));
+    theEntity->mProperties.Add<sf::Vector2u>("wFrameModifier",sf::Vector2u(0,0));
 #endif
     theEntity->mProperties.Add<sf::IntRect>("rFrameRect",sf::IntRect(0,0,0,0));
   }
@@ -69,7 +69,7 @@ namespace GQE
           sf::IntRect anSpriteRect = anEntity->mProperties.Get<sf::IntRect>("rSpriteRect");
 
           // Get some additional AnimationSystem properties
-          sf::Vector2i anFrameModifier = anEntity->mProperties.Get<sf::Vector2i>("vFrameModifier");
+          sf::Vector2i anFrameModifier = anEntity->mProperties.Get<sf::Vector2u>("wFrameModifier");
           sf::IntRect anFrameRect = anEntity->mProperties.Get<sf::IntRect>("rFrameRect");
 
           // Are we using a horizontal row of animation images?
@@ -111,7 +111,7 @@ namespace GQE
           sf::IntRect anSpriteRect = anEntity->mProperties.Get<sf::IntRect>("rSpriteRect");
 
           // Get some additional AnimationSystem properties
-          sf::Vector2u anFrameModifier = anEntity->mProperties.Get<sf::Vector2u>("vFrameModifier");
+          sf::Vector2u anFrameModifier = anEntity->mProperties.Get<sf::Vector2u>("wFrameModifier");
           sf::IntRect anFrameRect = anEntity->mProperties.Get<sf::IntRect>("rFrameRect");
 
           // Are we using a horizontal row of animation images?
