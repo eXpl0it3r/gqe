@@ -26,6 +26,7 @@ namespace GQE
   void RenderSystem::AddProperties(IEntity* theEntity)
   {
     theEntity->mProperties.Add<sf::Sprite>("Sprite",sf::Sprite());
+    theEntity->mProperties.Add<sf::Shape*>("Shape",NULL);
     theEntity->mProperties.Add<sf::IntRect>("rSpriteRect",sf::IntRect(0,0,0,0));
     theEntity->mProperties.Add<sf::Vector2f>("vScale",sf::Vector2f(1,1));
     theEntity->mProperties.Add<sf::Vector2f>("vOrigin",sf::Vector2f(0,0));
@@ -72,6 +73,7 @@ namespace GQE
         {
           // Get the other RenderSystem properties now
           sf::Sprite anSprite=anEntity->mProperties.Get<sf::Sprite>("Sprite");
+          sf::Shape* anShape=anEntity->mProperties.Get<sf::Shape*>("Shape");
 #if SFML_VERSION_MAJOR<2
           anSprite.SetPosition(anEntity->mProperties.Get<sf::Vector2f>("vPosition"));
           anSprite.SetRotation(anEntity->mProperties.Get<float>("fRotation"));
@@ -84,6 +86,14 @@ namespace GQE
           anSprite.setTextureRect(anEntity->mProperties.Get<sf::IntRect>("rSpriteRect"));
           anSprite.setOrigin(anEntity->mProperties.Get<sf::Vector2f>("vOrigin"));
           mApp.mWindow.draw(anSprite);
+          if(anShape!=NULL)
+          {
+            anShape->setPosition(anSprite.getPosition());
+            anShape->setRotation(anSprite.getRotation());
+            anShape->setOrigin(anSprite.getOrigin());
+            mApp.mWindow.draw(*anShape);
+          }
+          
 #endif
         } // if(anEntity->mProperties.Get<bool>("bVisible"))
       } // while(anQueue != anIter->second.end())
