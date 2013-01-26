@@ -151,8 +151,8 @@ namespace GQE
         // Increment the IEntity iterator second
         anQueue++;
 
-        // Are we NOT using fixed movement mathematics?
-        if(anEntity->mProperties.Get<bool>("bDebugDraw") == false)
+        // Are we drawing the bounding box
+        if(anEntity->mProperties.Get<bool>("bDebugDraw"))
         {
           sf::IntRect anBoundingBox = anEntity->mProperties.Get<sf::IntRect>("rBoundingBox");
           sf::Vector2f anPosition = anEntity->mProperties.Get<sf::Vector2f>("vPosition");
