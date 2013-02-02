@@ -26,6 +26,7 @@ namespace GQE
   void RenderSystem::AddProperties(IEntity* theEntity)
   {
     theEntity->mProperties.Add<sf::Sprite>("Sprite",sf::Sprite());
+    theEntity->mProperties.Add<sf::Shape*>("Shape",NULL);
     theEntity->mProperties.Add<sf::IntRect>("rSpriteRect",sf::IntRect(0,0,0,0));
     theEntity->mProperties.Add<sf::Vector2f>("vScale",sf::Vector2f(1,1));
     theEntity->mProperties.Add<sf::Vector2f>("vOrigin",sf::Vector2f(0,0));
@@ -72,18 +73,45 @@ namespace GQE
         {
           // Get the other RenderSystem properties now
           sf::Sprite anSprite=anEntity->mProperties.Get<sf::Sprite>("Sprite");
+          sf::Shape* anShape=anEntity->mProperties.Get<sf::Shape*>("Shape");
 #if SFML_VERSION_MAJOR<2
           anSprite.SetPosition(anEntity->mProperties.Get<sf::Vector2f>("vPosition"));
           anSprite.SetRotation(anEntity->mProperties.Get<float>("fRotation"));
-          anSprite.SetSubRect(anEntity->mProperties.Get<sf::IntRect>("rSpriteRect"));
+          sf::IntRect anRect=anEntity->mProperties.Get<sf::IntRect>("rSpriteRect");
+          if(anRect.GetWidth()==0)
+          {
+            anRect.right=anRect.left+anSprite.getTexture()->getSize().x;
+          }
+          if(anRect.GetHeight()==0)
+          {
+            anRect.bottom=anRect.top+anSprite.getTexture()->getSize().y;
+          }
+          anSprite.SetSubRect(anRect);
           anSprite.SetCenter(anEntity->mProperties.Get<sf::Vector2f>("vOrigin"));
           mApp.mWindow.Draw(anSprite);
 #else
           anSprite.setPosition(anEntity->mProperties.Get<sf::Vector2f>("vPosition"));
           anSprite.setRotation(anEntity->mProperties.Get<float>("fRotation"));
-          anSprite.setTextureRect(anEntity->mProperties.Get<sf::IntRect>("rSpriteRect"));
+          sf::IntRect anRect=anEntity->mProperties.Get<sf::IntRect>("rSpriteRect");
+          if(anRect.width==0)
+          {
+            anRect.width=anSprite.getTexture()->getSize().x;
+          }
+          if(anRect.height==0)
+          {
+            anRect.height=anSprite.getTexture()->getSize().y;
+          }
+          anSprite.setTextureRect(anRect);
           anSprite.setOrigin(anEntity->mProperties.Get<sf::Vector2f>("vOrigin"));
           mApp.mWindow.draw(anSprite);
+          if(anShape!=NULL)
+          {
+            anShape->setPosition(anSprite.getPosition());
+            anShape->setRotation(anSprite.getRotation());
+            anShape->setOrigin(anSprite.getOrigin());
+            mApp.mWindow.draw(*anShape);
+          }
+          
 #endif
         } // if(anEntity->mProperties.Get<bool>("bVisible"))
       } // while(anQueue != anIter->second.end())
