@@ -25,14 +25,14 @@ namespace GQE
 
   void AnimationSystem::AddProperties(IEntity* theEntity)
   {
-		theEntity->mProperties.Add<std::string>("CurrentAnimation","DefaultAnimation");
+		theEntity->mProperties.Add<std::string>("sCurrentAnimation","DefaultAnimation");
 		theEntity->mProperties.Add<std::vector<sf::IntRect>>("DefaultAnimation",std::vector<sf::IntRect>());
 		theEntity->mProperties.Add<sf::Clock>("AnimationClock",sf::Clock());
-		theEntity->mProperties.Add<float>("FramesPerSecond",12);
-		theEntity->mProperties.Add<GQE::Int32>("CurrentFrame",0);
+		theEntity->mProperties.Add<Uint32>("uFramesPerSecond",6);
+		theEntity->mProperties.Add<Uint32>("uCurrentFrame",0);
 	}
 
-  void AnimationSystem::HandleInit(GQE::IEntity* theEntity)
+  void AnimationSystem::HandleInit(IEntity* theEntity)
   {
   }
 
@@ -41,16 +41,13 @@ namespace GQE
   }
 
   void AnimationSystem::EntityUpdateFixed(IEntity* theEntity)
-  {
-		//Variables
-		sf::IntRect anTextureRect;
-				
+  {		
     // Get the AnimationSystem properties
 		sf::Clock anClock=theEntity->mProperties.Get<sf::Clock>("AnimationClock");
-		float anFPS=theEntity->mProperties.GetFloat("FramesPerSecond");
-		GQE::Int32 anCurrentFrame=theEntity->mProperties.GetInt32("CurrentFrame");
-		std::string anCurrentAnimation=theEntity->mProperties.GetString("CurrentAnimation");
-		if(anClock.getElapsedTime().asMilliseconds()>1/anFPS)
+		Uint32 anFPS=theEntity->mProperties.GetUint32("uFramesPerSecond");
+		Uint32 anCurrentFrame=theEntity->mProperties.GetUint32("uCurrentFrame");
+		std::string anCurrentAnimation=theEntity->mProperties.GetString("sCurrentAnimation");
+		if(anClock.getElapsedTime().asMilliseconds()>1000/anFPS)
 		{
 			anClock.restart();
 			anCurrentFrame++;
@@ -61,10 +58,8 @@ namespace GQE
 				{
 					anCurrentFrame=0;
 				}
-				anTextureRect=anAnimation[anCurrentFrame];
-				theEntity->mProperties.Set<sf::IntRect>("rTextureRect",anTextureRect);
 				theEntity->mProperties.Set<sf::Clock>("AnimationClock",anClock);
-				theEntity->mProperties.SetInt32("CurrentFrame",anCurrentFrame);
+				theEntity->mProperties.SetUint32("uCurrentFrame",anCurrentFrame);
 			}
 		}
 	}
@@ -72,8 +67,20 @@ namespace GQE
   {
   }
 
-  void AnimationSystem::Draw()
+  void AnimationSystem::EntityDraw(IEntity* theEntity)
   {
+		std::string anAnimationID=theEntity->mProperties.GetString("sCurrentAnimation");
+		if(anAnimationID!="")
+		{
+			typeRectList anAnimation=theEntity->mProperties.Get<typeRectList>(anAnimationID);
+			Uint32 anCurrentFrame=theEntity->mProperties.GetUint32("uCurrentFrame");
+			if(!anAnimation.empty() && anCurrentFrame<anAnimation.size())
+			{
+				sf::IntRect anTextureRect=anAnimation[anCurrentFrame];
+				theEntity->mProperties.Set<sf::IntRect>("rTextureRect",anTextureRect);
+			}
+		}
+
   }
 
   void AnimationSystem::HandleCleanup(GQE::IEntity* theEntity)

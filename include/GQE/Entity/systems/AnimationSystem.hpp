@@ -59,13 +59,13 @@ namespace GQE
       virtual void UpdateVariable(float theElapsedTime);
 
       /**
-       * Draw is called during the game loop after events and the fixed update
+       * EntityDraw is called during the game loop after events and the fixed update
        * loop calls are completed and depends largely on the speed of the
        * computer to determine how frequently it will be called. This gives the
        * EntityManager a chance to call the Draw method for each Instance
        * class.
        */
-      virtual void Draw(void);
+      virtual void EntityDraw(IEntity* theEntity);
 
     protected:
       /**
