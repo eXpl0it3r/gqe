@@ -51,10 +51,6 @@ set(SRC
 # find external SFML libraries
 find_package(SFML REQUIRED graphics window system)
 
-# add include paths of external libraries
-include_directories(${SFML_INCLUDE_DIR})
-
-
 if(BUILD_SHARED_LIBS)
   # define the gqe-Entity target
   gqe_add_library(gqe-entity
@@ -63,7 +59,7 @@ if(BUILD_SHARED_LIBS)
                   INCLUDES      ${INC}
                   SOURCES       ${SRC}
                   DEPENDS       gqe-core
-                  EXTERNAL_LIBS ${SFML_GRAPHICS_LIBRARY} ${SFML_WINDOW_LIBRARY} ${SFML_SYSTEM_LIBRARY} )
+                  EXTERNAL_LIBS sfml-graphics)
 else()
   # define the gqe-Entity target (for a static build, we use depends to remove LNK4006 and LNK4221 errors with Visual Studio)
   gqe_add_library(gqe-entity
@@ -72,5 +68,5 @@ else()
                   INCLUDES      ${INC}
                   SOURCES       ${SRC}
                   DEPENDS       gqe-core
-                  DEPENDS       ${SFML_GRAPHICS_LIBRARY} ${SFML_WINDOW_LIBRARY} ${SFML_SYSTEM_LIBRARY} )
+                  DEPENDS       sfml-graphics)
 endif()

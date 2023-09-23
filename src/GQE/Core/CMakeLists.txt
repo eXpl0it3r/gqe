@@ -98,9 +98,6 @@ set(SRC
 # find external SFML libraries
 find_package(SFML REQUIRED audio graphics window network system)
 
-# add include paths of external libraries
-include_directories(${SFML_INCLUDE_DIR})
-
 if(BUILD_SHARED_LIBS)
   # define the gqe-core target
   gqe_add_library(gqe-core
@@ -108,7 +105,7 @@ if(BUILD_SHARED_LIBS)
                   HEADER_DIR    ${INCROOT}/Core
                   INCLUDES      ${INC}
                   SOURCES       ${SRC}
-                  EXTERNAL_LIBS ${SFML_AUDIO_LIBRARY} ${SFML_GRAPHICS_LIBRARY} ${SFML_WINDOW_LIBRARY} ${SFML_NETWORK_LIBRARY} ${SFML_SYSTEM_LIBRARY})
+                  EXTERNAL_LIBS sfml-audio sfml-graphics sfml-network)
 else()
   # define the gqe-core target (for a static build, we use depends to remove LNK4006 and LNK4221 errors with Visual Studio)
   gqe_add_library(gqe-core
@@ -116,5 +113,5 @@ else()
                   HEADER_DIR    ${INCROOT}/Core
                   INCLUDES      ${INC}
                   SOURCES       ${SRC}
-                  DEPENDS       ${SFML_AUDIO_LIBRARY} ${SFML_GRAPHICS_LIBRARY} ${SFML_WINDOW_LIBRARY} ${SFML_NETWORK_LIBRARY} ${SFML_SYSTEM_LIBRARY})
+                  DEPENDS       sfml-audio sfml-graphics sfml-network)
 endif()

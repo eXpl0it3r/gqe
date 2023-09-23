@@ -58,9 +58,6 @@ endif()
 # define SFML_STATIC if the SFML_STATIC_LIBRARIES type is set to 'On'
 if(SFML_STATIC_LIBRARIES)
   add_definitions(-DSFML_STATIC)
-else()
-  # This flag is needed for SFML 1.6 to be able to import SFML values correctly
-  add_definitions(-DSFML_DYNAMIC)
 endif(SFML_STATIC_LIBRARIES)
 
 # define GQE_STATIC if the build type is not set to 'shared'
@@ -82,7 +79,7 @@ if(WINDOWS)
     endif()
 
     # require proper c++
-    ADD_DEFINITIONS("-Wall -lstdc++")
+    add_definitions("-Wall -lstdc++")
   elseif(COMPILER_MSVC)
     # Specify where to find DLL and LIB files according to 32bit or 64bit compiling
     if(ARCH_32BITS)
@@ -95,17 +92,6 @@ if(WINDOWS)
 
     # remove SL security warnings with Visual C++
     add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-    
-    # for VC++, we can apply it globally by modifying the compiler flags
-    if(BUILD_STATIC_STD_LIBS)
-      foreach(flag
-              CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-              CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-        if(${flag} MATCHES "/MD")
-          string(REGEX REPLACE "/MD" "/MT" ${flag} "${${flag}}")
-        endif()
-      endforeach()
-    endif()
   endif()
 elseif(LINUX)
   if(COMPILER_CLANG)
@@ -115,12 +101,12 @@ elseif(LINUX)
   endif()
 
   # require proper c++
-  ADD_DEFINITIONS("-Wall")
+  add_definitions("-Wall")
 elseif(MACOSX)
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "${PROJECT_SOURCE_DIR}/extlibs/libs-osx/lib/")
 
   # require proper c++
-  ADD_DEFINITIONS("-Wall")
+  add_definitions("-Wall")
 endif()
 
 # offer the user the choice of overriding the installation directories

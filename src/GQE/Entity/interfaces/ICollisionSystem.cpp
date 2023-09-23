@@ -5,6 +5,7 @@
  * @author Jacob Dix
  * @date 20120611 Initial release
  */
+#include <limits>
 #include <SFML/Graphics.hpp>
 #include <GQE/Entity/interfaces/ICollisionSystem.hpp>
 #include <GQE/Entity/interfaces/IEntity.hpp>
