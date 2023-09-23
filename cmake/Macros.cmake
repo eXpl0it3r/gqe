@@ -11,51 +11,6 @@ macro(set_option var default type docstring)
   set(${var} ${${var}} CACHE ${type} ${docstring} FORCE)
 endmacro(set_option)
 
-# some of these macros are inspired from the boost/cmake macros
-# this macro adds external dependencies to a static target,
-# compensating for the lack of a link step when building a static library.
-# every compiler has its own way of doing it:
-# - VC++ supports it directly through the static library flags
-# - MinGW/gcc doesn't support it, but as a static library is nothing more than an archive,
-#   we can simply merge the external dependencies to our generated target as a post-build step
-# - we don't do anything for other compilers and OSes; static build is not encouraged on Unix (Linux, Mac OS X)
-#   where shared libraries are properly managed and have many advantages over static libraries
-macro(gqe_static_add_libraries target)
-  if(WINDOWS AND COMPILER_GCC)
-    # Windows - gcc
-    foreach(lib ${ARGN})
-      if(NOT ${lib} MATCHES ".*/.*")
-        string(REGEX REPLACE "(.*)/bin/.*\\.exe" "\\1" STANDARD_LIBS_PATH "${CMAKE_CXX_COMPILER}")
-        set(lib "${STANDARD_LIBS_PATH}/lib/lib${lib}.a")
-      endif()
-      string(TOUPPER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
-      get_target_property(TARGET_FILENAME ${target} ${BUILD_TYPE}_LOCATION)
-      add_custom_command(TARGET ${target}
-                         POST_BUILD
-                         COMMAND ${CMAKE_AR} x ${lib}
-                         COMMAND ${CMAKE_AR} rcs ${TARGET_FILENAME} *.o
-                         COMMAND del *.o /f /q
-                         VERBATIM)
-    endforeach()
-  elseif(MSVC)
-    # Visual C++
-    set(LIBRARIES "")
-    foreach(lib ${ARGN})
-      if(NOT ${lib} MATCHES ".*\\.lib")
-        set(lib ${lib}.lib)
-      endif()
-      if(MSVC_IDE AND COMPILER_MSVC LESS 2010)
-        # for Visual Studio projects < 2010, we must add double quotes
-        # around paths because they may contain spaces
-        set(LIBRARIES "${LIBRARIES} &quot\\;${lib}&quot\\;")
-      else()
-        set(LIBRARIES "${LIBRARIES} \"${lib}\"")
-      endif()
-    endforeach()
-    set_target_properties(${target} PROPERTIES STATIC_LIBRARY_FLAGS ${LIBRARIES})
-  endif()
-endmacro()
-
 # check if a value is contained in a list
 # sets ${var} to TRUE if the value is found
 macro(gqe_list_contains var value)
@@ -144,9 +99,11 @@ macro(gqe_add_library target)
   set_target_properties(${target} PROPERTIES VERSION ${GQE_VERSION_MAJOR}.${GQE_VERSION_MINOR}.${GQE_VERSION_PATCH})
 
   # for gcc 4.x on Windows, apply the BUILD_STATIC_STD_LIBS option if it is enabled
-  if(WINDOWS AND COMPILER_GCC AND BUILD_STATIC_STD_LIBS)
-    if(${GCC_VERSION} MATCHES "4\\..*")
+  if(WINDOWS AND BUILD_STATIC_STD_LIBS)
+    if(COMPILER_GCC AND "${GCC_VERSION}" MATCHES "4\\..*")
       set_target_properties(${target} PROPERTIES LINK_FLAGS "-static-libgcc -static-libstdc++")
+    elseif(COMPILER_MSVC)
+      set_target_properties(${target} PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     endif()
   endif()
 
@@ -157,14 +114,7 @@ macro(gqe_add_library target)
 
   # link the target to its external dependencies
   if(THIS_EXTERNAL_LIBS)
-    if(BUILD_SHARED_LIBS)
-      # in shared build, we use the regular linker commands
-      target_link_libraries(${target} ${THIS_EXTERNAL_LIBS})
-    else()
-      # in static build there's no link stage, but with some compilers it is possible to force
-      # the generated static library to directly contain the symbols from its dependencies
-      gqe_static_add_libraries(${target} ${THIS_EXTERNAL_LIBS})
-    endif(BUILD_SHARED_LIBS)
+    target_link_libraries(${target} ${THIS_EXTERNAL_LIBS})
   endif(THIS_EXTERNAL_LIBS)
 
   # add the install rule
@@ -206,9 +156,11 @@ macro(gqe_add_example target)
     set_target_properties(${target} PROPERTIES DEBUG_POSTFIX -d)
 
     # for gcc 4.x on Windows, apply the BUILD_STATIC_STD_LIBS option if it is enabled
-    if(WINDOWS AND COMPILER_GCC AND BUILD_STATIC_STD_LIBS)
-        if(${GCC_VERSION} MATCHES "4\\..*")
+    if(WINDOWS AND BUILD_STATIC_STD_LIBS)
+        if(COMPILER_GCC AND "${GCC_VERSION}" MATCHES "4\\..*")
             set_target_properties(${target} PROPERTIES LINK_FLAGS "-static-libgcc -static-libstdc++")
+        elseif(COMPILER_MSVC)
+          set_target_properties(${target} PROPERTIES MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
         endif()
     endif()
 
@@ -219,69 +171,21 @@ macro(gqe_add_example target)
 
     # always copy dll files over to build directory after build
     if(WINDOWS)
-      if(COMPILER_GCC)
-        if(ARCH_32BITS)
-          if(EXISTS ${SFML_INCLUDE_DIR}/../bin-mingw/x86/libsndfile-1.dll)
-            add_custom_command(TARGET ${target}
-                               POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy
-                               ${SFML_INCLUDE_DIR}/../bin-mingw/x86/libsndfile-1.dll
-                               ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
-          endif()
-          if(EXISTS ${SFML_INCLUDE_DIR}/../bin-mingw/x86/openal32.dll)
-            add_custom_command(TARGET ${target}
-                               POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy
-                               ${SFML_INCLUDE_DIR}/../bin-mingw/x86/openal32.dll
-                               ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
-          endif()
-        else()
-          if(EXISTS ${SFML_INCLUDE_DIR}/../bin-mingw/x64/libsndfile-1.dll)
-            add_custom_command(TARGET ${target}
-                               POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy
-                               ${SFML_INCLUDE_DIR}/../bin-mingw/x64/libsndfile-1.dll
-                               ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
-          endif()
-          if(EXISTS ${SFML_INCLUDE_DIR}/../bin-mingw/x64/openal32.dll)
-            add_custom_command(TARGET ${target}
-                               POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy
-                               ${SFML_INCLUDE_DIR}/../bin-mingw/x64/openal32.dll
-                               ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
-          endif()
+      if(ARCH_32BITS)
+        if(EXISTS ${SFML_INCLUDE_DIR}/../bin/x86/openal32.dll)
+          add_custom_command(TARGET ${target}
+                              POST_BUILD
+                              COMMAND ${CMAKE_COMMAND} -E copy
+                              ${SFML_INCLUDE_DIR}/../bin/x86/openal32.dll
+                              ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
         endif()
-      elseif(COMPILER_MSVC)
-        if(ARCH_32BITS)
-          if(EXISTS ${SFML_INCLUDE_DIR}/../bin-msvc/x86/libsndfile-1.dll)
-            add_custom_command(TARGET ${target}
-                               POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy
-                               ${SFML_INCLUDE_DIR}/../bin-msvc/x86/libsndfile-1.dll
-                               ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
-          endif()
-          if(EXISTS ${SFML_INCLUDE_DIR}/../bin-msvc/x86/openal32.dll)
-            add_custom_command(TARGET ${target}
-                               POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy
-                               ${SFML_INCLUDE_DIR}/../bin-msvc/x86/openal32.dll
-                               ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
-          endif()
-        else()
-          if(EXISTS ${SFML_INCLUDE_DIR}/../bin-msvc/x64/libsndfile-1.dll)
-            add_custom_command(TARGET ${target}
-                               POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy
-                               ${SFML_INCLUDE_DIR}/../bin-msvc/x64/libsndfile-1.dll
-                               ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
-          endif()
-          if(EXISTS ${SFML_INCLUDE_DIR}/../bin-msvc/x64/openal32.dll)
-            add_custom_command(TARGET ${target}
-                               POST_BUILD
-                               COMMAND ${CMAKE_COMMAND} -E copy
-                               ${SFML_INCLUDE_DIR}/../bin-msvc/x64/openal32.dll
-                               ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
-          endif()
+      else()
+        if(EXISTS ${SFML_INCLUDE_DIR}/../bin/x64/openal32.dll)
+          add_custom_command(TARGET ${target}
+                              POST_BUILD
+                              COMMAND ${CMAKE_COMMAND} -E copy
+                              ${SFML_INCLUDE_DIR}/../bin/x64/openal32.dll
+                              ${PROJECT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
         endif()
       endif()
     endif()

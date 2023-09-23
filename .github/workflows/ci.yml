@@ -1,0 +1,65 @@
+name: CI
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    name: ${{ matrix.platform.name }}
+    runs-on: ${{ matrix.platform.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - { name: Windows VS2019, os: windows-2019 }
+          - { name: Windows VS2022, os: windows-2022 }
+          - { name: Linux GCC, os: ubuntu-latest }
+          - { name: Linux Clang, os: ubuntu-latest, flags: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ }
+          - { name: macOS, os: macos-latest }
+
+    steps:
+      - name: Get CMake and Ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: latest
+          ninjaVersion: latest
+
+      - name: Install Linux Dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libegl1-mesa-dev
+
+      - name: Checkout SFML
+        uses: actions/checkout@v3
+        with:
+          repository: SFML/SFML
+          path: sfml
+          ref: 2.6.x
+
+      - name: Configure
+        shell: bash
+        run: cmake -S sfml -B sfml-build -DCMAKE_INSTALL_PREFIX=sfml-install -DBUILD_SHARED_LIBS=FALSE ${{matrix.platform.flags}}
+
+      - name: Build SFML
+        shell: bash
+        run: cmake --build sfml-build --config Release
+
+      - name: Install SFML
+        shell: bash
+        run: cmake --install sfml-build --config Release
+
+      - name: Checkout GQE
+        uses: actions/checkout@v3
+        with:
+          path: gqe
+
+      - name: Configure GQE
+        shell: bash
+        run: cmake -S gqe -B gqe-build -DCMAKE_INSTALL_PREFIX=gqe-install -DBUILD_SHARED_LIBS=FALSE -DSFML_STATIC_LIBRARIES=TRUE -DSFMLDIR=$GITHUB_WORKSPACE/sfml-install -DSFML_DIR=$GITHUB_WORKSPACE/sfml-install/lib/cmake/SFML ${{matrix.platform.flags}}
+
+      - name: Build GQE
+        shell: bash
+        run: cmake --build gqe-build --config Release
+
+      - name: Install GQE
+        shell: bash
+        run: cmake --install gqe-build --config Release

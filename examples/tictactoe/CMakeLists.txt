@@ -13,12 +13,10 @@ set(SRC
 # find external SFML libraries
 if(WINDOWS)
   find_package(SFML REQUIRED main)
+  set(SFML_WINDOWS_DEPENDENCY sfml-main)
 endif(WINDOWS)
-
-# add include paths of external libraries
-include_directories(${SFML_INCLUDE_DIR})
 
 # define the demo target
 gqe_add_example(tictactoe GUI_APP
                 SOURCES ${SRC}
-                DEPENDS gqe-core)
+                DEPENDS gqe-core ${SFML_WINDOWS_DEPENDENCY})
